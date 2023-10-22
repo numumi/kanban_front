@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react";
-import BoardCard from "./boardCard";
+import BoardCard from "./BoardCard";
 
 import boardListData from "../public/data/board-list.json";
 
