@@ -1,4 +1,5 @@
 import React from "react";
+import Link  from "next/link";
 import SearchIcon from "@mui/icons-material/Search";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -8,7 +9,9 @@ const Header = () => {
   return (
     <header className="bg-blue-500 p-4 flex justify-between items-center">
       {/* ロゴ */}
-      <div className="text-white text-2xl font-bold">BOARD APP</div>
+      <Link href="/" className="text-white text-2xl font-bold">
+        BOARD APP
+      </Link>
 
       {/* 検索フォーム */}
       <div className="relative mx-4">
