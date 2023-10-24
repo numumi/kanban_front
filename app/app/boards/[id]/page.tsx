@@ -1,13 +1,20 @@
 "use client";
 import { useParams } from "next/navigation";
+import BoardBody from "./BoardBody";
+
 
 export default function Board() {
-  const params = useParams();
-  const id = params.id;
+
+  // ボードidに対するデータを取得してatomに格納
+  {console.log('11111111111')}
 
   return (
     <div>
-      <p>bord{id}画面</p>
+      {/* ボードのヘッダー ボード名とアサインユーザーのアイコンを表示 */}
+      {/* ボード本体 */}
+      <BoardBody />
     </div>
   );
 }
+
+
