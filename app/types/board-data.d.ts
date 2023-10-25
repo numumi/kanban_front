@@ -1,20 +1,20 @@
-type TaskType = {
-  id: number;
+export type TaskType = {
+  id: string;
   name: string;
-  description: string;
+  description?: string;
 };
 
-type ColumnType = {
-  id: number;
-  name: string;
-  tasks: Record<TaskType[]>;
+export type ColumnType = {
+  id: string;
+  title: string;
+  tasks: TaskType[];
 };
 
 type BoardType = {
   id: number;
   image: string;
   name: string;
-  columns: Record<ColumnType[]>;
+  columns: ColumnType[];
 };
 
 export default BoardType;
