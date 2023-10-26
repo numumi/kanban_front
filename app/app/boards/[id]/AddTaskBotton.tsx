@@ -2,16 +2,15 @@
 import React, { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
-import { ColumnType, TaskType } from "@/types/board-data";
+import { TaskType } from "@/types/board-data";
 import { v4 as uuid } from "uuid";
 
 type ColumnProps = {
-  column: ColumnType;
   tasks: TaskType[];
   setTasks: (tasks: TaskType[]) => void;
 };
 const AddTaskBotton: React.FC<ColumnProps> = (props) => {
-  const { column, tasks, setTasks } = props;
+  const { tasks, setTasks } = props;
   const [isEditing, setIsEditing] = useState(false);
   const taskId = uuid();
   const [taskInput, setTaskInput] = useState("");

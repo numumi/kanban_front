@@ -4,11 +4,6 @@ import BoardBody from "./BoardBody";
 import { RecoilRoot } from "recoil";
 
 export default function Board() {
-  // ボードidに対するデータを取得してatomに格納
-  {
-    console.log("11111111111");
-  }
-
   return (
     <RecoilRoot>
       {/* ボードのヘッダー ボード名とアサインユーザーのアイコンを表示 */}

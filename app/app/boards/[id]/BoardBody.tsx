@@ -1,16 +1,17 @@
 "use client";
-import React from "react";
-import { useRecoilState } from "recoil";
+import React, { useEffect, useMemo } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { boardState, columnsState } from "@/recoils/boardState";
 
-import { boardState } from "@/recoils/boardState";
-
-import AddIcon from "@mui/icons-material/Add";
 import Column from "./Column";
 import AddColumnButton from "./AddColumnButton";
 
 const BoardBody = () => {
-  const [board, setBoard] = useRecoilState(boardState);
-  const [columns, setColumns] = React.useState(board.columns);
+  const board = useRecoilValue(boardState);
+  const [columns, setColumns] = useRecoilState(columnsState);
+  useEffect(() => {
+    setColumns(columns);
+  }, [columns]);
 
   return (
     <div

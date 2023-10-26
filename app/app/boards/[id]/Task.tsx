@@ -4,7 +4,7 @@ import { TaskType } from "@/types/board-data";
 
 type TaskProps = {
   task: TaskType;
-}
+};
 
 const Task = ({ task }: TaskProps) => {
   return (

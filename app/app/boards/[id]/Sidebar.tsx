@@ -1,7 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import { Board } from "../../..//types/board-list";
+import { useState } from "react";
 
 import boardListData from "../../../public/data/board-list.json";
 
