@@ -38,7 +38,7 @@ const ColumnTitle = ({ column }: ColumnTitleProps) => {
     handleSave();
   };
   return (
-    <div className="w-full p-1 cursor-pointer">
+    <div className="ml-2 w-full p-1 cursor-pointer">
       {isEditing ? (
         <form onSubmit={handleSubmit}>
           <input
@@ -51,7 +51,7 @@ const ColumnTitle = ({ column }: ColumnTitleProps) => {
           />
         </form>
       ) : (
-        <h1 onClick={handleTitleClick}>
+        <h1 onClick={handleTitleClick} className="select-none">
           {title}
         </h1>
       )}

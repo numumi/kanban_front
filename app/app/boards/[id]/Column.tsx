@@ -1,16 +1,18 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 
 import { ColumnType } from "@/types/board-data";
 import ColumnTitle from "./ColumnTitle";
 import Task from "./Task";
-import AddColumnBotton from "./AddColumnBotton";
 import ClearIcon from "@mui/icons-material/Clear";
+import AddTaskBotton from "./AddTaskBotton";
 
 type ColumnProps = {
   column: ColumnType;
 };
 
 const Column = ({ column }: ColumnProps) => {
+  const [tasks, setTasks] = useState(column.tasks);
   return (
     <div>
       <div className="relative w-60 p-1 m-2 bg-gray-200 rounded">
@@ -19,10 +21,10 @@ const Column = ({ column }: ColumnProps) => {
           <ClearIcon className="cursor-pointer hover:bg-gray-400" />
         </div>
 
-        {column.tasks.map((task) => (
+        {tasks.map((task) => (
           <Task key={task.id} task={task} />
         ))}
-        <AddColumnBotton />
+        <AddTaskBotton column={column} tasks={tasks} setTasks={setTasks} />
       </div>
     </div>
   );
