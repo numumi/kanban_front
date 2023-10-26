@@ -34,9 +34,6 @@ const ColumnTitle = ({ column }: ColumnTitleProps) => {
     setIsEditing(false);
   };
 
-  const handleBlur = () => {
-    handleSave();
-  };
   return (
     <div className="ml-2 w-full p-1 cursor-pointer">
       {isEditing ? (
@@ -44,7 +41,7 @@ const ColumnTitle = ({ column }: ColumnTitleProps) => {
           <input
             type="text"
             onChange={handleChange}
-            onBlur={handleBlur}
+            onBlur={handleSave}
             maxLength={10}
             value={newTitle}
             autoFocus

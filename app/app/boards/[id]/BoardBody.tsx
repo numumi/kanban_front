@@ -6,9 +6,11 @@ import { boardState } from "@/recoils/boardState";
 
 import AddIcon from "@mui/icons-material/Add";
 import Column from "./Column";
+import AddColumnButton from "./AddColumnButton";
 
 const BoardBody = () => {
   const [board, setBoard] = useRecoilState(boardState);
+  const [columns, setColumns] = React.useState(board.columns);
 
   return (
     <div
@@ -16,13 +18,10 @@ const BoardBody = () => {
       style={{ backgroundImage: `url(${board.image})`, height: "100vh" }}
     >
       <div className="flex">
-        {board.columns.map((column) => (
+        {columns.map((column) => (
           <Column key={column.id} column={column} />
         ))}
-        <div className="flex w-60 h-20 p-1 m-2 bg-gray-200 rounded bg-opacity-30 hover:bg-gray-200 cursor-pointer">
-          <AddIcon />
-          <p>追加</p>
-        </div>
+        <AddColumnButton columns={columns} setColumns={setColumns} />
       </div>
     </div>
   );
