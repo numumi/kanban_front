@@ -2,18 +2,20 @@
 import React, { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
-import { TaskType } from "@/types/board-data";
+import { ColumnType, TaskType } from "@/types/board-data";
 import { v4 as uuid } from "uuid";
+import { columnsState } from "@/recoils/boardState";
+import { useRecoilState } from "recoil";
 
 type ColumnProps = {
-  tasks: TaskType[];
-  setTasks: (tasks: TaskType[]) => void;
+  column: ColumnType;
 };
 const AddTaskBotton: React.FC<ColumnProps> = (props) => {
-  const { tasks, setTasks } = props;
+  const { column } = props;
   const [isEditing, setIsEditing] = useState(false);
   const taskId = uuid();
   const [taskInput, setTaskInput] = useState("");
+  const [columns, setColumns] = useRecoilState(columnsState);
   const handleAddForm = () => {
     setIsEditing(true);
   };
@@ -27,12 +29,18 @@ const AddTaskBotton: React.FC<ColumnProps> = (props) => {
     if (taskInput === "") {
       return;
     }
-    const newTask = {
+    const newTask: TaskType = {
       id: taskId,
       name: taskInput,
     };
-    setTasks([...tasks, newTask]);
-    console.log(tasks);
+    const newColumn = {...column, tasks: [...column.tasks, newTask]};
+    const newColumns = columns.map((column) => {
+      if (column.id === newColumn.id) {
+        return newColumn;
+      }
+      return column;
+    });
+    setColumns(newColumns);
     setTaskInput("");
     setIsEditing(false);
   };

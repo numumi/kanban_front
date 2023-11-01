@@ -17,10 +17,7 @@ const Column: FC<ColumnProps> = memo(({ column }: ColumnProps) => {
   const { setNodeRef } = useDroppable({
     id: column.id,
   });
-  const [tasks, setTasks] = useState(column.tasks);
-  useEffect(() => {
-    setTasks(column.tasks);
-  }, [column.tasks]);
+  const tasks = column.tasks;
   return (
     <SortableContext
       id={column.id}
@@ -41,7 +38,7 @@ const Column: FC<ColumnProps> = memo(({ column }: ColumnProps) => {
           {tasks.map((task) => (
             <Task key={task.id} task={task} />
           ))}
-          <AddTaskBotton tasks={tasks} setTasks={setTasks} />
+          <AddTaskBotton column={column} />
         </div>
       </div>
     </SortableContext>
