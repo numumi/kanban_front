@@ -22,8 +22,6 @@ const AddTaskBotton: React.FC<ColumnProps> = (props) => {
   };
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setTaskInput(e.target.value);
-    console.log("taskInput");
-    console.log(taskInput);
   };
   const handleSubmit = () => {
     if (taskInput === "") {
