@@ -18,7 +18,7 @@ import {
 import Column from "./Column";
 import AddColumnButton from "./AddColumnButton";
 import Task from "./Task";
-import { TaskType } from "@/types/board-data";
+import { ColumnType, TaskType } from "@/types/board-data";
 
 type CustomDragOverEvent = DragOverEvent & {
   activatorEvent: {
@@ -29,13 +29,15 @@ type CustomDragOverEvent = DragOverEvent & {
 const BoardBody = () => {
   const board = useRecoilValue(boardState);
   const [columns, setColumns] = useRecoilState(columnsState);
-
+  const [prevColumns, setPrevColumns] = useState<ColumnType[]>([]);
   const [activeTask, setActiveTask] = useState<TaskType>();
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
   useEffect(() => {
     setColumns(columns);
   }, [columns]);
+  const displayColumns = prevColumns.length > 0 ? prevColumns : columns;
+
   // 特定のtaskIdを持つタスクを検索する関数:
   const findTask = (taskId: string) => {
     // すべてのカラムを走査する
@@ -122,46 +124,12 @@ const BoardBody = () => {
       return column;
     });
 
-    setColumns(newColumns);
+    setPrevColumns(newColumns);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    //ドラッグしたリソースのid
-    const id = active.id.toString();
-    //ドロップした場所にあったリソースのid
-    const overId = over?.id;
-    //dragoverができたあとに実装予定
-
-    if (!overId) return;
-    const activeColumnId = active?.data.current?.sortable.containerId;
-    const overColumnId = over?.data.current
-      ? over.data.current.sortable.containerId
-      : overId;
-
-    if (!activeColumnId || !overColumnId || activeColumnId !== overColumnId) {
-      return;
-    }
-
-    // タスクのインデックスを取得します。
-    const activeTaskIndex = active.data?.current?.sortable.index;
-    const overTaskIndex = over?.data?.current?.sortable.index;
-    const newTask = activeTask;
-    if (!newTask) return;
-    const newColumns = columns.map((column) => {
-      if (column.id === activeColumnId) {
-        const updatedTasks = [...column.tasks];
-        updatedTasks.splice(activeTaskIndex, 1);
-        updatedTasks.splice(overTaskIndex, 0, newTask);
-        return {
-          ...column,
-          tasks: updatedTasks,
-        };
-      }
-      return column;
-    });
-
-    // setColumns(newColumns);
+    setPrevColumns([]);
+    setColumns(prevColumns);
     setActiveTask(undefined);
   };
 
@@ -179,7 +147,7 @@ const BoardBody = () => {
         style={{ backgroundImage: `url(${board.image})`, height: "100vh" }}
       >
         <div className="flex">
-          {columns.map((column) => (
+          {displayColumns.map((column) => (
             <Column key={column.id} column={column} />
           ))}
           <AddColumnButton columns={columns} setColumns={setColumns} />
