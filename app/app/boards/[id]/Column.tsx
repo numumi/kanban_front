@@ -23,16 +23,14 @@ const Column: FC<ColumnProps> = memo(({ column, cursor }: ColumnProps) => {
     });
   const style = {
     transform: CSS.Transform.toString(transform),
+    transition,
   };
   const { setNodeRef: setColumnRef } = useDroppable({
     id: column.id,
   });
   const tasks = column.tasks;
   return (
-    <div
-      ref={setNodeRef}
-      style={{ transform: CSS.Transform.toString(transform), transition }}
-    >
+    <div ref={setNodeRef}>
       <SortableContext
         id={column.id}
         items={tasks}

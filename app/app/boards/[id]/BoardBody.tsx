@@ -13,7 +13,6 @@ import {
   DragStartEvent,
   DragOverEvent,
   closestCorners,
-  UniqueIdentifier,
 } from "@dnd-kit/core";
 
 import Task from "./Task";
@@ -102,7 +101,8 @@ const BoardBody = () => {
     // overTaskの底面のY座標を取得
     const overRectBottom = over?.rect.bottom;
     // 移動先のカラムのドロップ位置を計算
-    const newTaskIndex = overRectBottom &&
+    const newTaskIndex =
+      overRectBottom &&
       activeRectTop > overRectBottom &&
       overTaskIndex === overColumn?.tasks.length - 1
         ? overTaskIndex + 1
@@ -158,20 +158,22 @@ const BoardBody = () => {
 
   // ドラッグ開始時に発火する関数
   const handleDragStart = (event: DragStartEvent) => {
-    const { active } = event;
-    // ドラッグしたリソースのid
-    const id = active.id.toString();
-    if (id.startsWith("task")) {
-      const task = findTask(id);
-      if (task) {
-        setActiveTask(task);
+    setTimeout(() => {
+      const { active } = event;
+      // ドラッグしたリソースのid
+      const id = active.id.toString();
+      if (id.startsWith("task")) {
+        const task = findTask(id);
+        if (task) {
+          setActiveTask(task);
+        }
+      } else if (id.startsWith("column")) {
+        const column = columns.find((column) => column.id === id);
+        if (column) {
+          setActiveColumn(column);
+        }
       }
-    } else if (id.startsWith("column")) {
-      const column = columns.find((column) => column.id === id);
-      if (column) {
-        setActiveColumn(column);
-      }
-    }
+    }, 100);
   };
 
   const handleDragOver = (event: CustomDragOverEvent) => {
@@ -188,10 +190,8 @@ const BoardBody = () => {
 
   const handleDragEnd = (event: DragEndEvent) => {
     if (prevColumns.length > 0) {
-      console.log("handleDragEnd", prevColumns);
       setColumns(prevColumns);
     }
-
     setPrevColumns([]);
     setActiveTask(undefined);
     setActiveColumn(undefined);
@@ -212,13 +212,14 @@ const BoardBody = () => {
       >
         <Columns columns={displayColumns} setColumns={setColumns} />
       </div>
-      <DragOverlay>
-        {activeTask ? (
-          <Task task={activeTask} cursor="cursor-grabbing" />
-        ) : activeColumn ? (
-          <Column column={activeColumn} cursor="cursor-grabbing" />
-        ) : null}
-      </DragOverlay>
+      {activeTask || activeColumn ? (
+        <DragOverlay>
+          {activeTask && <Task task={activeTask} cursor="cursor-grabbing" />}
+          {activeColumn && (
+            <Column column={activeColumn} cursor="cursor-grabbing" />
+          )}
+        </DragOverlay>
+      ) : null}
     </DndContext>
   );
 };

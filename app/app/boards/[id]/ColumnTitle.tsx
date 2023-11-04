@@ -48,7 +48,7 @@ const ColumnTitle = ({ column }: ColumnTitleProps) => {
           />
         </form>
       ) : (
-        <h1 onClick={handleTitleClick} className="select-none">
+        <h1 onMouseUp={handleTitleClick} className="select-none">
           {title}
         </h1>
       )}
