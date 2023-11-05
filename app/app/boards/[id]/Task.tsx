@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { TaskType } from "@/types/board-data";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import Link from "next/link";
 
 type TaskProps = {
   task: TaskType;
@@ -21,16 +22,23 @@ const Task = ({ task, cursor }: TaskProps) => {
     transition,
   };
 
+  const handleMouseUp = () => {
+    console.log("mouse up");
+  };
+
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...listeners}
-      {...attributes}
-      className={`m-2 p-2 bg-white shadow-md rounded border-2 border-gray-200 hover:border-blue-500 ${cursor}`}
-    >
-      {task.name}
-    </div>
+    <Link href={`/tasks/${task.id}`}>
+      <div
+        ref={setNodeRef}
+        style={style}
+        {...listeners}
+        {...attributes}
+        className={`m-2 p-2 bg-white shadow-md rounded border-2 border-gray-200 hover:border-blue-500 ${cursor}`}
+        onMouseUp={handleMouseUp}
+      >
+        {task.name}
+      </div>
+    </Link>
   );
 };
 

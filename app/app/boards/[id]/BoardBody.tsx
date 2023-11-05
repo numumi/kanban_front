@@ -173,7 +173,7 @@ const BoardBody = () => {
           setActiveColumn(column);
         }
       }
-    }, 100);
+    }, 200);
   };
 
   const handleDragOver = (event: CustomDragOverEvent) => {

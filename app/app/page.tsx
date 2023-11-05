@@ -5,7 +5,6 @@ import BoardCard from "./BoardCard";
 import boardListData from "../public/data/board-list.json";
 
 import { Board } from "../types/board-list";
-import { RecoilRoot } from "recoil";
 
 export default function Home() {
   const [boardList, setBoardList] = useState<Board[]>(boardListData);
