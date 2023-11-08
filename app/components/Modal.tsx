@@ -1,41 +1,35 @@
 "use client";
 import React, { useState } from "react";
-import { createPortal } from "react-dom";
 
 type ModalProps = {
   children?: React.ReactNode;
+  onClose: () => void;
 };
 
-const Modal: React.FC<ModalProps> = ({ children }) => {
-  const [modalOpen, setModalOpen] = useState(false);
-  if (!modalOpen) return null;
+const Modal: React.FC<ModalProps> = ({ children, onClose }) => {
+  const onMaskClick = (e: any) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
 
-  const modalMaskStyle: {
-    [key: string]: number | string;
-  } = {
+  const modalWrapperStyle: { [key: string]: string } = {
     position: "fixed",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    top: "0",
+    left: "0",
+    zIndex: "2",
     display: "flex",
-    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
     justifyContent: "center",
+    width: "100%",
+    height: "100%",
+    contain: "content",
   };
 
-  const onClose = () => {
-    setModalOpen(false);
-  };
-
-  const modalMask = <div style={modalMaskStyle} onClick={onClose}></div>;
-  console.log("modal");
-  return createPortal(
-    <>
-      {modalMask}
+  return (
+    <div style={modalWrapperStyle} onClick={onMaskClick}>
       {children}
-    </>,
-    document.body
+    </div>
   );
 };
 

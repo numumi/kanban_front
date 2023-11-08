@@ -1,17 +1,23 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { memo, useEffect } from "react";
 
-import { TaskType } from "@/types/board-data";
+import { ColumnType, TaskType } from "@/types/board-data";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import Link from "next/link";
+import ReactDOM from "react-dom";
+import TaskDetailsModal from "./TaskDetailModal";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { modalTaskState, tasksState } from "@/recoils/boardState";
 
 type TaskProps = {
   task: TaskType;
   cursor?: string;
+  columnTitle?: string;
 };
 
-const Task = ({ task, cursor }: TaskProps) => {
+const Task = ({ task, cursor, columnTitle }: TaskProps) => {
+  const tasks = useRecoilValue(tasksState);
+  const [modalTask, setModalTask] = useRecoilState(modalTaskState);
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
       id: task.id,
@@ -23,22 +29,26 @@ const Task = ({ task, cursor }: TaskProps) => {
   };
 
   const handleMouseUp = () => {
-    console.log("mouse up");
+
+    const taskDetail = tasks.find((_task) => _task.id === task.id);
+
+    if (!taskDetail || !columnTitle) return;
+
+    const modalTask = { task: taskDetail, columnTitle: columnTitle };
+    setModalTask(modalTask);
   };
 
   return (
-    <Link href={`/tasks/${task.id}`}>
-      <div
-        ref={setNodeRef}
-        style={style}
-        {...listeners}
-        {...attributes}
-        className={`m-2 p-2 bg-white shadow-md rounded border-2 border-gray-200 hover:border-blue-500 ${cursor}`}
-        onMouseUp={handleMouseUp}
-      >
-        {task.name}
-      </div>
-    </Link>
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+      className={`m-2 p-2 bg-white shadow-md rounded border-2 border-gray-200 hover:border-blue-500 ${cursor}`}
+      onMouseUp={handleMouseUp}
+    >
+      {task.name}
+    </div>
   );
 };
 

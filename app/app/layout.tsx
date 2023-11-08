@@ -12,16 +12,16 @@ export const metadata: Metadata = {
   description: "next rails kanban app",
 };
 
-export default function RootLayout(props: {
+export default function RootLayout({
+  children,
+}: {
   children: React.ReactNode;
-  modal: React.ReactNode;
 }) {
   return (
     <html lang="ja">
       <body>
         <Header />
-        {props.children}
-        {props.modal}
+        {children}
       </body>
     </html>
   );

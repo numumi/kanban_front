@@ -1,7 +1,13 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { boardState, columnsState } from "@/recoils/boardState";
+import {
+  activeColumnState,
+  activeTaskState,
+  boardState,
+  columnsState,
+  modalTaskState,
+} from "@/recoils/boardState";
 import {
   DndContext,
   MouseSensor,
@@ -26,16 +32,20 @@ type CustomDragOverEvent = DragOverEvent & {
   };
 };
 
-const BoardBody = () => {
+const Board = () => {
   const board = useRecoilValue(boardState);
   const [columns, setColumns] = useRecoilState(columnsState);
   const [prevColumns, setPrevColumns] = useState<ColumnType[]>([]);
-  const [activeTask, setActiveTask] = useState<TaskType>();
-  const [activeColumn, setActiveColumn] = useState<ColumnType>();
+  const [activeTask, setActiveTask] = useRecoilState(activeTaskState);
+  const [activeColumn, setActiveColumn] = useRecoilState(activeColumnState);
+  const [modalTask, setModalTask] = useRecoilState(modalTaskState);
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
   useEffect(() => {
     setColumns(columns);
   }, [columns]);
+  useEffect(() => {
+    setModalTask(modalTask);
+  }, [modalTask]);
   const displayColumns = prevColumns.length > 0 ? prevColumns : columns;
 
   // 特定のtaskIdを持つタスクを検索する関数:
@@ -164,6 +174,7 @@ const BoardBody = () => {
       const id = active.id.toString();
       if (id.startsWith("task")) {
         const task = findTask(id);
+
         if (task) {
           setActiveTask(task);
         }
@@ -177,6 +188,8 @@ const BoardBody = () => {
   };
 
   const handleDragOver = (event: CustomDragOverEvent) => {
+    if (!activeTask && !activeColumn) return;
+
     const id = event.active.id.toString();
 
     // idがtaskから始まる場合、taskの移動処理
@@ -196,7 +209,6 @@ const BoardBody = () => {
     setActiveTask(undefined);
     setActiveColumn(undefined);
   };
-
   return (
     <DndContext
       id={"board"}
@@ -224,4 +236,4 @@ const BoardBody = () => {
   );
 };
 
-export default BoardBody;
+export default Board;

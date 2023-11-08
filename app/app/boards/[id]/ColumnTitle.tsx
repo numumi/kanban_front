@@ -2,6 +2,8 @@
 import React, { useState, useRef } from "react";
 
 import { ColumnType } from "@/types/board-data";
+import { useSetRecoilState } from "recoil";
+import { activeColumnState } from "@/recoils/boardState";
 
 type ColumnTitleProps = {
   column: ColumnType;
@@ -10,6 +12,7 @@ const ColumnTitle = ({ column }: ColumnTitleProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(column.title);
   const [newTitle, setNewTitle] = useState(title);
+  const setActiveColumn = useSetRecoilState(activeColumnState);
 
   const handleTitleClick = () => {
     setIsEditing(true);
@@ -31,6 +34,7 @@ const ColumnTitle = ({ column }: ColumnTitleProps) => {
       setTitle(newTitle);
       // colimn tittle updateのリクエストを送る
     }
+    setActiveColumn(undefined);
     setIsEditing(false);
   };
 

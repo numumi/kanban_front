@@ -52,7 +52,7 @@ const Column: FC<ColumnProps> = memo(({ column, cursor }: ColumnProps) => {
             </div>
 
             {tasks.map((task) => (
-              <Task key={task.id} task={task} />
+              <Task key={task.id} task={task} columnTitle={column.title} />
             ))}
             <AddTaskBotton column={column} />
           </div>
