@@ -4,7 +4,7 @@ import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 import { ColumnType, TaskType } from "@/types/board-data";
 import { v4 as uuid } from "uuid";
-import { columnsState } from "@/recoils/boardState";
+import { columnsState, tasksState } from "@/recoils/boardState";
 import { useRecoilState } from "recoil";
 
 type ColumnProps = {
@@ -16,6 +16,7 @@ const AddTaskBotton: React.FC<ColumnProps> = (props) => {
   const taskId = uuid();
   const [taskInput, setTaskInput] = useState("");
   const [columns, setColumns] = useRecoilState(columnsState);
+  const [tasks, setTasks] = useRecoilState(tasksState);
   const handleAddForm = () => {
     setIsEditing(true);
   };
@@ -30,10 +31,10 @@ const AddTaskBotton: React.FC<ColumnProps> = (props) => {
       return;
     }
     const newTask: TaskType = {
-      id: taskId,
+      id: `task-${taskId}`,
       name: taskInput,
     };
-    const newColumn = {...column, tasks: [...column.tasks, newTask]};
+    const newColumn = { ...column, tasks: [...column.tasks, newTask] };
     const newColumns = columns.map((column) => {
       if (column.id === newColumn.id) {
         return newColumn;
@@ -41,6 +42,7 @@ const AddTaskBotton: React.FC<ColumnProps> = (props) => {
       return column;
     });
     setColumns(newColumns);
+    setTasks([...tasks, newTask]);
     setTaskInput("");
     setIsEditing(false);
   };
@@ -87,3 +89,5 @@ const AddTaskBotton: React.FC<ColumnProps> = (props) => {
 };
 
 export default AddTaskBotton;
+
+// tasksStateも修正のこと

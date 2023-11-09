@@ -37,7 +37,7 @@ const AddColumnButton: React.FC<ColumnsProps> = (props) => {
       return;
     }
     const newColumn = {
-      id: columnId,
+      id: `column-${columnId}`,
       title: title,
       tasks: [],
     };
