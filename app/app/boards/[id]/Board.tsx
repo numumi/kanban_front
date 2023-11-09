@@ -6,7 +6,6 @@ import {
   activeTaskState,
   boardState,
   columnsState,
-  modalTaskState,
 } from "@/recoils/boardState";
 import {
   DndContext,
@@ -22,7 +21,7 @@ import {
 } from "@dnd-kit/core";
 
 import Task from "./Task";
-import { ColumnType, TaskType } from "@/types/board-data";
+import { ColumnType } from "@/types/board-data";
 import Columns from "./Columns";
 import Column from "./Column";
 
@@ -38,14 +37,12 @@ const Board = () => {
   const [prevColumns, setPrevColumns] = useState<ColumnType[]>([]);
   const [activeTask, setActiveTask] = useRecoilState(activeTaskState);
   const [activeColumn, setActiveColumn] = useRecoilState(activeColumnState);
-  const [modalTask, setModalTask] = useRecoilState(modalTaskState);
+
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
   useEffect(() => {
     setColumns(columns);
   }, [columns]);
-  useEffect(() => {
-    setModalTask(modalTask);
-  }, [modalTask]);
+
   const displayColumns = prevColumns.length > 0 ? prevColumns : columns;
 
   // 特定のtaskIdを持つタスクを検索する関数:
@@ -189,7 +186,7 @@ const Board = () => {
 
   const handleDragOver = (event: CustomDragOverEvent) => {
     if (!activeTask && !activeColumn) return;
-
+    console.log("handleDragOver");
     const id = event.active.id.toString();
 
     // idがtaskから始まる場合、taskの移動処理

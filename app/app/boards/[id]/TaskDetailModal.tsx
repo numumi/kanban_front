@@ -1,14 +1,19 @@
-import React, { use } from "react";
-import ReactMarkdown from "react-markdown";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import React, { use, useState } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
 
 import Modal from "../../../components/Modal";
 import ClearIcon from "@mui/icons-material/Clear";
-import { activeTaskState, modalTaskState } from "@/recoils/boardState";
+import {
+  activeTaskState,
+  modalTaskState,
+  tasksState,
+} from "@/recoils/boardState";
 
 const TaskDetailsModal = () => {
   const setActiveTask = useSetRecoilState(activeTaskState);
+  const [isEditing, setIsEditing] = useState(false);
   const [modalTask, setModalTask] = useRecoilState(modalTaskState);
+  const [tasks, setTasks] = useRecoilState(tasksState);
   if (!modalTask) return null;
 
   const task = modalTask.task;
@@ -34,6 +39,33 @@ const TaskDetailsModal = () => {
     setModalTask(undefined);
   };
 
+  const handleDescriptionClick = () => {
+    setIsEditing(true); // 説明をクリックしたら編集モードに切り替える
+  };
+
+  const handleDescriptionChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const updateTask = { ...modalTask.task, description: e.target.value };
+    setModalTask({
+      ...modalTask,
+      task: updateTask,
+    });
+    const updatedTasks: any = tasks.map((task) => {
+      if (task.id === modalTask.task.id) {
+        return updateTask;
+      }
+      return task;
+    });
+    setTasks(updatedTasks);
+    e.target.style.height = "inherit";
+    e.target.style.height = `${e.target.scrollHeight}px`;
+  };
+
+  const handleDescriptionBlur = () => {
+    setIsEditing(false); // フォームからフォーカスが外れたら編集モードを終了する
+  };
+
   return (
     <Modal onClose={onClose}>
       <div className="h-0">
@@ -46,10 +78,24 @@ const TaskDetailsModal = () => {
           </div>
           <h2 className="font-bold">{task.name}</h2>
           <div className="text-sm text-gray-500 mb-2">{columnTitle}</div>
-          <div className="bg-gray-200 p-2 rounded min-h-[8rem] cursor-pointer hover:bg-gray-300">
-            <ReactMarkdown>{task.description}</ReactMarkdown>
+          <div className=" cursor-pointer" onClick={handleDescriptionClick}>
+            {isEditing ? (
+              <div className="w-full h-full bg-white border-gray-200 hover:border-blue-500">
+                <textarea
+                  className="bg-white w-full h-full p-2 min-h-[8rem] border-none overflow-hidden"
+                  value={task.description}
+                  onChange={handleDescriptionChange}
+                  onBlur={handleDescriptionBlur}
+                  style={{ height: "auto" }}
+                  autoFocus
+                />
+              </div>
+            ) : (
+              <div className="bg-gray-200 rounded  p-2 min-h-[8rem] hover:bg-gray-300 whitespace-pre-wrap">
+                {task.description}
+              </div>
+            )}
           </div>
-          {/* その他のタスクの詳細情報を表示 */}
         </div>
       </div>
     </Modal>
@@ -57,8 +103,3 @@ const TaskDetailsModal = () => {
 };
 
 export default TaskDetailsModal;
-
-// recoilRootの中に入れる
-// modalOpenをatomで作成
-// modalOpenの初期値はfalse
-// document.bodyにTaskDetailsModalを表示する

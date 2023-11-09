@@ -1,11 +1,8 @@
 "use client";
-import React, { memo, useEffect } from "react";
-
-import { ColumnType, TaskType } from "@/types/board-data";
+import { TaskType } from "@/types/board-data";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import ReactDOM from "react-dom";
-import TaskDetailsModal from "./TaskDetailModal";
+
 import { useRecoilState, useRecoilValue } from "recoil";
 import { modalTaskState, tasksState } from "@/recoils/boardState";
 
@@ -29,7 +26,6 @@ const Task = ({ task, cursor, columnTitle }: TaskProps) => {
   };
 
   const handleMouseUp = () => {
-
     const taskDetail = tasks.find((_task) => _task.id === task.id);
 
     if (!taskDetail || !columnTitle) return;
