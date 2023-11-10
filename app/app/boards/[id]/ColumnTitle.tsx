@@ -7,9 +7,10 @@ import { activeColumnState } from "@/recoils/boardState";
 
 type ColumnTitleProps = {
   column: ColumnType;
+  isEditing: boolean;
+  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 };
-const ColumnTitle = ({ column }: ColumnTitleProps) => {
-  const [isEditing, setIsEditing] = useState(false);
+const ColumnTitle = ({ column, isEditing, setIsEditing }: ColumnTitleProps) => {
   const [title, setTitle] = useState(column.title);
   const [newTitle, setNewTitle] = useState(title);
   const setActiveColumn = useSetRecoilState(activeColumnState);
@@ -19,6 +20,7 @@ const ColumnTitle = ({ column }: ColumnTitleProps) => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("handleChange");
     setNewTitle(e.target.value);
   };
 
@@ -39,10 +41,11 @@ const ColumnTitle = ({ column }: ColumnTitleProps) => {
   };
 
   return (
-    <div className="ml-2 w-full p-1 cursor-pointer">
+    <div className="ml-2 pt-1 w-full cursor-pointer">
       {isEditing ? (
         <form onSubmit={handleSubmit}>
           <input
+            className="pl-1"
             type="text"
             onChange={handleChange}
             onBlur={handleSave}
@@ -52,7 +55,7 @@ const ColumnTitle = ({ column }: ColumnTitleProps) => {
           />
         </form>
       ) : (
-        <h1 onMouseUp={handleTitleClick} className="select-none">
+        <h1 onMouseUp={handleTitleClick} className="select-none pl-1">
           {title}
         </h1>
       )}

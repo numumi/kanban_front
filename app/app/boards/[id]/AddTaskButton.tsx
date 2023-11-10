@@ -10,7 +10,7 @@ import { useRecoilState } from "recoil";
 type ColumnProps = {
   column: ColumnType;
 };
-const AddTaskBotton: React.FC<ColumnProps> = (props) => {
+const AddTaskButton: React.FC<ColumnProps> = (props) => {
   const { column } = props;
   const [isEditing, setIsEditing] = useState(false);
   const taskId = uuid();
@@ -28,7 +28,7 @@ const AddTaskBotton: React.FC<ColumnProps> = (props) => {
   };
   const handleSubmit = () => {
     if (taskInput === "") {
-      return;
+      return setIsEditing(false);
     }
     const newTask: TaskType = {
       id: `task-${taskId}`,
@@ -63,13 +63,13 @@ const AddTaskBotton: React.FC<ColumnProps> = (props) => {
           <div className="flex ml-2 mr-2">
             <button
               onClick={handleSubmit}
-              className="p-1 bg-blue-400 rounded cursor-pointer hover:bg-blue-500 text-white"
+              className="p-1 bg-blue-400 rounded cursor-pointer hover:bg-blue-400 text-white"
             >
               追加
             </button>
             <button
               onClick={handleCancelAdd}
-              className="m-1 cursor-pointer hover:bg-gray-400"
+              className="m-1 cursor-pointer hover:bg-gray-300"
             >
               <ClearIcon />
             </button>
@@ -78,7 +78,7 @@ const AddTaskBotton: React.FC<ColumnProps> = (props) => {
       ) : (
         <div
           onClick={handleAddForm}
-          className="flex w-20 h-10 p-1 rounded cursor-pointer hover:bg-gray-400 select-none"
+          className="flex w-20 h-10 p-1 rounded cursor-pointer hover:bg-gray-300 select-none"
         >
           <AddIcon />
           <p>追加</p>
@@ -88,6 +88,6 @@ const AddTaskBotton: React.FC<ColumnProps> = (props) => {
   );
 };
 
-export default AddTaskBotton;
+export default AddTaskButton;
 
 // tasksStateも修正のこと

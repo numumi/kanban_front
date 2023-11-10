@@ -7,7 +7,7 @@ const Sidebar = () => {
   const [boardList, setBoard] = useState(boardListData);
 
   return (
-    <div className="p-2">
+    <div style={{width: 'var(--sidebar-width)'}} className="p-2">
       <h2>ボード一覧</h2>
       <ul style={{ padding: 0 }}>
         {boardList &&

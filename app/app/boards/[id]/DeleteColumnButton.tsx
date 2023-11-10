@@ -16,8 +16,14 @@ const DeleteColumnButton = ({ column }: DeleteColumnBottonProps) => {
     setColumns(newColumns);
   };
   return (
-    <div onClick={handleDelete}>
-      <ClearIcon className="cursor-pointer hover:bg-gray-400" />
+    <div
+      onClick={handleDelete}
+      className="opacity-0 group-hover:opacity-100 items-center justify-center"
+    >
+      <ClearIcon
+        className="cursor-pointer hover:bg-gray-300 "
+        fontSize="small"
+      />
     </div>
   );
 };

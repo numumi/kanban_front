@@ -1,5 +1,5 @@
 import React from "react";
-import Link  from "next/link";
+import Link from "next/link";
 import SearchIcon from "@mui/icons-material/Search";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -7,7 +7,10 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const Header = () => {
   return (
-    <header className="bg-blue-500 p-4 flex justify-between items-center">
+    <header
+      style={{ height: "var(--header-height)" }}
+      className="bg-blue-500 p-4 flex justify-between items-center"
+    >
       {/* ロゴ */}
       <Link href="/" className="text-white text-2xl font-bold">
         BOARD APP

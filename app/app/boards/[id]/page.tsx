@@ -11,9 +11,7 @@ import { modalTaskState } from "@/recoils/boardState";
 export default function BoardPage() {
   return (
     <RecoilRoot>
-      <div className="flex-1">
-        <Board />
-      </div>
+      <Board />
       <TaskDetailsModal />
     </RecoilRoot>
   );

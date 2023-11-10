@@ -7,9 +7,9 @@ type Props = {
 
 const Layout: React.FC<Props> = ({ children }) => {
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex bg-gray-100">
       <Sidebar />
-      {children}
+      <main>{children}</main>
     </div>
   );
 };

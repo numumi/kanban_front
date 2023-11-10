@@ -166,6 +166,7 @@ const Board = () => {
   // ドラッグ開始時に発火する関数
   const handleDragStart = (event: DragStartEvent) => {
     setTimeout(() => {
+      console.log("handleDragStart");
       const { active } = event;
       // ドラッグしたリソースのid
       const id = active.id.toString();
@@ -185,17 +186,19 @@ const Board = () => {
   };
 
   const handleDragOver = (event: CustomDragOverEvent) => {
-    if (!activeTask && !activeColumn) return;
-    console.log("handleDragOver");
-    const id = event.active.id.toString();
+    setTimeout(() => {
+      if (!activeTask && !activeColumn) return;
 
-    // idがtaskから始まる場合、taskの移動処理
-    // idがcolumnから始まる場合、columnの移動処理
-    if (id.startsWith("task")) {
-      taskReorder(event);
-    } else if (id.startsWith("column")) {
-      columnReorder(event);
-    }
+      const id = event.active.id.toString();
+
+      // idがtaskから始まる場合、taskの移動処理
+      // idがcolumnから始まる場合、columnの移動処理
+      if (id.startsWith("task")) {
+        taskReorder(event);
+      } else if (id.startsWith("column")) {
+        columnReorder(event);
+      }
+    }, 200);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -206,6 +209,7 @@ const Board = () => {
     setActiveTask(undefined);
     setActiveColumn(undefined);
   };
+
   return (
     <DndContext
       id={"board"}
@@ -217,7 +221,12 @@ const Board = () => {
     >
       <div
         className="p-5"
-        style={{ backgroundImage: `url(${board.image})`, height: "100vh" }}
+        style={{
+          backgroundImage: `url(${board.image})`,
+          width: "calc(100vw - var(--sidebar-width))",
+          height: "calc(100vh - var(--header-height))",
+          overflowX: "auto",
+        }}
       >
         <Columns columns={displayColumns} setColumns={setColumns} />
       </div>

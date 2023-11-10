@@ -25,7 +25,11 @@ const Columns: FC<ColumnsProps> = (props) => {
       items={columns}
       strategy={horizontalListSortingStrategy}
     >
-      <div className="flex" ref={setNodeRef}>
+      <div
+        className="flex"
+        style={{ minHeight: "100px" }}
+        ref={setNodeRef}
+      >
         {columns.map((column) => (
           <Column key={column.id} column={column} />
         ))}
