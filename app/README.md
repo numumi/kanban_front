@@ -1,10 +1,16 @@
-Next.js学習でカンバンボードを作成
-ドラッグアンドドロップはdnd-kitを使用
-カラムの移動とタスクの移動ができる
-dnd-kitのcontext内ではなぜかintercepting routeが使えないため
-bodyタグにモーダルを描写
+## 概要
+- Next.js学習でカンバンボードを作成  
+- ドラッグアンドドロップはdnd-kitを使用
+- カラムの移動とタスクの移動ができる
+- dnd-kitのcontext内ではintercepting routeが使えないため bodyタグにモーダルを描写
 
-サーバー側はRailsのAPIモードで作成予定
-  認証や認可はMySql
-  ボード本体はMongoDB
-テスト未実装
+### 課題
+- APIからデータfetch
+- APIとWebSocket通信
+- テスト
+- ESLint
+- エラーハンドリング
+- ユーザー認証、認可
+
+### URL  
+https://kanban-front-16jnmnwld-numumis-projects.vercel.app/
