@@ -75,3 +75,4 @@ const Column: FC<ColumnProps> = memo(({ column, cursor }: ColumnProps) => {
 });
 
 export default Column;
+Column.displayName = "Column";
