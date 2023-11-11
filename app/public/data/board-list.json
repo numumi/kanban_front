@@ -1,16 +1,16 @@
 [
   {
-    "id": 1,
+    "id": "1",
     "image": "/texture_00065.jpg",
     "name": "Board 1"
   },
   {
-    "id": 2,
+    "id": "2",
     "image": "/wood-texture_00003.jpg",
     "name": "Board 2"
   },
   {
-    "id": 3,
+    "id": "3",
     "image": "/mountain_00004.jpg",
     "name": "Board 3"
   }

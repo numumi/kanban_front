@@ -1,5 +1,5 @@
 "use client";
-import React, { memo, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   activeColumnState,
@@ -24,6 +24,8 @@ import Task from "./Task";
 import { ColumnType } from "@/types/board-data";
 import Columns from "./Columns";
 import Column from "./Column";
+import { useParams } from "next/navigation";
+import BoardData from "../../../public/data/board-data.json";
 
 type CustomDragOverEvent = DragOverEvent & {
   activatorEvent: {
@@ -32,16 +34,34 @@ type CustomDragOverEvent = DragOverEvent & {
 };
 
 const Board = () => {
-  const board = useRecoilValue(boardState);
+  const boardId = useParams().id;
+
+  const [board, setBoard] = useRecoilState(boardState);
+
   const [columns, setColumns] = useRecoilState(columnsState);
   const [prevColumns, setPrevColumns] = useState<ColumnType[]>([]);
   const [activeTask, setActiveTask] = useRecoilState(activeTaskState);
   const [activeColumn, setActiveColumn] = useRecoilState(activeColumnState);
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
+
+  useEffect(() => {
+    const boardData = BoardData.find((board) => board.id === boardId);
+
+    if (boardData) {
+      setBoard(boardData);
+    }
+  }, [boardId]);
+
   useEffect(() => {
     setColumns(columns);
   }, [columns]);
+
+  useEffect(() => {
+    if (board) {
+      setColumns(board.columns);
+    }
+  }, [board]);
 
   const displayColumns = prevColumns.length > 0 ? prevColumns : columns;
 
@@ -209,6 +229,8 @@ const Board = () => {
     setActiveTask(undefined);
     setActiveColumn(undefined);
   };
+
+  if (!board || !columns) return <div>Loading...</div>;
 
   return (
     <DndContext

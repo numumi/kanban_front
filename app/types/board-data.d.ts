@@ -11,7 +11,7 @@ export type ColumnType = {
 };
 
 type BoardType = {
-  id: number;
+  id: string;
   image: string;
   name: string;
   columns: ColumnType[];
