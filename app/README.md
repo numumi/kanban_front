@@ -13,4 +13,4 @@
 - ユーザー認証、認可
 
 ### URL  
-https://kanban-front-16jnmnwld-numumis-projects.vercel.app/
+https://kanban-front-one.vercel.app/
