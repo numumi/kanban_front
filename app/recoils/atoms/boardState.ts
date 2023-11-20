@@ -1,8 +1,7 @@
-import boardData from "../public/data/board-data.json";
-import boardListData from "../public/data/board-list.json";
+import boardData from "../../public/data/board-data.json";
 
 import { atom } from "recoil";
-import BoardType, { ColumnType, TaskType } from "../types/board-data"; // 上記で定義した型定義をインポート
+import BoardType, { ColumnType, TaskType } from "../../types/board-data"; // 上記で定義した型定義をインポート
 
 // ボードの初期データ
 export const boardState = atom<BoardType>({
@@ -19,10 +18,10 @@ export const columnsState = atom<ColumnType[]>({
 // タスクリストの初期データ
 const boards: BoardType[] = boardData;
 if (!Array.isArray(boards)) {
-  console.error('boardData is not an array');
+  console.error("boardData is not an array");
 }
 if (!boards) {
-  console.error('boards is undefined');
+  console.error("boards is undefined");
 }
 
 export const taskData = boards.flatMap((board) =>

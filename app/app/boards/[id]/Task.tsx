@@ -4,7 +4,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 import { useRecoilState, useRecoilValue } from "recoil";
-import { modalTaskState, tasksState } from "@/recoils/boardState";
+import { modalTaskState, tasksState } from "@/recoils/atoms/boardState";
 
 type TaskProps = {
   task: TaskType;

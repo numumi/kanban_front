@@ -1,5 +1,5 @@
 export type Board = {
-  id: string;
+  id: number;
   image: string;
   name: string;
 };

@@ -3,7 +3,7 @@ import React from "react";
 import ClearIcon from "@mui/icons-material/Clear";
 import { ColumnType } from "@/types/board-data";
 import { useRecoilState } from "recoil";
-import { columnsState } from "@/recoils/boardState";
+import { columnsState } from "@/recoils/atoms/boardState";
 
 type DeleteColumnBottonProps = {
   column: ColumnType;

@@ -4,7 +4,7 @@ import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 import { ColumnType, TaskType } from "@/types/board-data";
 import { v4 as uuid } from "uuid";
-import { columnsState, tasksState } from "@/recoils/boardState";
+import { columnsState, tasksState } from "@/recoils/atoms/boardState";
 import { useRecoilState } from "recoil";
 
 type ColumnProps = {

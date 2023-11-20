@@ -6,7 +6,7 @@ import {
   activeTaskState,
   boardState,
   columnsState,
-} from "@/recoils/boardState";
+} from "@/recoils/atoms/boardState";
 import {
   DndContext,
   MouseSensor,

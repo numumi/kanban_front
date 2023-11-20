@@ -7,7 +7,7 @@ import {
   activeTaskState,
   modalTaskState,
   tasksState,
-} from "@/recoils/boardState";
+} from "@/recoils/atoms/boardState";
 
 const TaskDetailsModal = () => {
   const setActiveTask = useSetRecoilState(activeTaskState);

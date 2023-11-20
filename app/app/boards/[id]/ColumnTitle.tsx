@@ -3,7 +3,7 @@ import React, { useState, useRef } from "react";
 
 import { ColumnType } from "@/types/board-data";
 import { useSetRecoilState } from "recoil";
-import { activeColumnState } from "@/recoils/boardState";
+import { activeColumnState } from "@/recoils/atoms/boardState";
 
 type ColumnTitleProps = {
   column: ColumnType;
