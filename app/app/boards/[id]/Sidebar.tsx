@@ -10,6 +10,7 @@ const Sidebar = () => {
   const isLoading = boardListLoadable.state === "loading";
   const hasError = boardListLoadable.state === "hasError";
 
+  console.log("boardList", boardList);
   return (
     <div style={{ width: "var(--sidebar-width)" }} className="p-2">
       <h2>ボード一覧</h2>

@@ -6,7 +6,7 @@ export type TaskType = {
 
 export type ColumnType = {
   id: string;
-  title: string;
+  name: string;
   tasks: TaskType[];
 };
 

@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValueLoadable } from "recoil";
 import {
   activeColumnState,
   activeTaskState,
@@ -25,7 +25,7 @@ import { ColumnType } from "@/types/board-data";
 import Columns from "./Columns";
 import Column from "./Column";
 import { useParams } from "next/navigation";
-import BoardData from "../../../public/data/board-data.json";
+import fetchBoardData from "@/recoils/selectors/fetchBoardData";
 
 type CustomDragOverEvent = DragOverEvent & {
   activatorEvent: {
@@ -34,8 +34,8 @@ type CustomDragOverEvent = DragOverEvent & {
 };
 
 const Board = () => {
-  const boardId = useParams().id;
-
+  const boardId = Number(useParams().id);
+  const boardDataLoadable = useRecoilValueLoadable(fetchBoardData(boardId));
   const [board, setBoard] = useRecoilState(boardState);
 
   const [columns, setColumns] = useRecoilState(columnsState);
@@ -44,12 +44,11 @@ const Board = () => {
   const [activeColumn, setActiveColumn] = useRecoilState(activeColumnState);
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
+  setBoard(boardDataLoadable.contents);
 
   useEffect(() => {
-    const boardData = BoardData.find((board) => board.id === boardId);
-
-    if (boardData) {
-      setBoard(boardData);
+    if (boardDataLoadable.state === "hasValue") {
+      setBoard(boardDataLoadable.contents);
     }
   }, [boardId]);
 
@@ -62,7 +61,6 @@ const Board = () => {
       setColumns(board.columns);
     }
   }, [board]);
-
   const displayColumns = prevColumns.length > 0 ? prevColumns : columns;
 
   // 特定のtaskIdを持つタスクを検索する関数:

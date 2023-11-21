@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 
 import { ColumnType } from "@/types/board-data";
 import { useSetRecoilState } from "recoil";
@@ -11,7 +11,7 @@ type ColumnTitleProps = {
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 };
 const ColumnTitle = ({ column, isEditing, setIsEditing }: ColumnTitleProps) => {
-  const [title, setTitle] = useState(column.title);
+  const [title, setTitle] = useState(column.name);
   const [newTitle, setNewTitle] = useState(title);
   const setActiveColumn = useSetRecoilState(activeColumnState);
 
@@ -21,7 +21,7 @@ const ColumnTitle = ({ column, isEditing, setIsEditing }: ColumnTitleProps) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log("handleChange");
-    setNewTitle(e.target.value);
+    setNewTitle(e.target.value);  
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
