@@ -1,6 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValueLoadable } from "recoil";
+import {
+  useRecoilState,
+  useRecoilValueLoadable,
+} from "recoil";
 import {
   activeColumnState,
   activeTaskState,
@@ -37,31 +40,22 @@ const Board = () => {
   const boardId = Number(useParams().id);
   const boardDataLoadable = useRecoilValueLoadable(fetchBoardData(boardId));
   const [board, setBoard] = useRecoilState(boardState);
-
   const [columns, setColumns] = useRecoilState(columnsState);
-  const [prevColumns, setPrevColumns] = useState<ColumnType[]>([]);
   const [activeTask, setActiveTask] = useRecoilState(activeTaskState);
   const [activeColumn, setActiveColumn] = useRecoilState(activeColumnState);
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
-  setBoard(boardDataLoadable.contents);
 
   useEffect(() => {
     if (boardDataLoadable.state === "hasValue") {
       setBoard(boardDataLoadable.contents);
+      setColumns(boardDataLoadable.contents.columns);
     }
-  }, [boardId]);
+  }, [boardDataLoadable]);
 
   useEffect(() => {
     setColumns(columns);
   }, [columns]);
-
-  useEffect(() => {
-    if (board) {
-      setColumns(board.columns);
-    }
-  }, [board]);
-  const displayColumns = prevColumns.length > 0 ? prevColumns : columns;
 
   // 特定のtaskIdを持つタスクを検索する関数:
   const findTask = (taskId: string) => {
@@ -161,11 +155,13 @@ const Board = () => {
       }
       return column;
     });
-    setPrevColumns(newColumns);
+    setColumns(newColumns);
   };
 
   const columnReorder = (event: CustomDragOverEvent) => {
     const { active, over } = event;
+    console.log("active:", active); // activeの値をログに出力
+    console.log("over:", over); // overの値をログに出力
     const id = active.id.toString();
     const overId = over?.id;
     if (!overId) return;
@@ -175,16 +171,17 @@ const Board = () => {
     const overIndex = columns.findIndex((column) => column.id === overId);
 
     const newColumns = [...columns];
-    // ドラッグしたカラムを取り除く
-    const remmoveColumn = newColumns.splice(activeIndex, 1);
-    newColumns.splice(overIndex, 0, remmoveColumn[0]);
-    setPrevColumns(newColumns);
+    // activeIndexのcolumnとoverIndexのcolumnを入れ替える
+    [newColumns[activeIndex], newColumns[overIndex]] = [
+      newColumns[overIndex],
+      newColumns[activeIndex],
+    ];
+    setColumns(newColumns);
   };
 
   // ドラッグ開始時に発火する関数
   const handleDragStart = (event: DragStartEvent) => {
     setTimeout(() => {
-      console.log("handleDragStart");
       const { active } = event;
       // ドラッグしたリソースのid
       const id = active.id.toString();
@@ -206,7 +203,7 @@ const Board = () => {
   const handleDragOver = (event: CustomDragOverEvent) => {
     setTimeout(() => {
       if (!activeTask && !activeColumn) return;
-
+      
       const id = event.active.id.toString();
 
       // idがtaskから始まる場合、taskの移動処理
@@ -220,10 +217,7 @@ const Board = () => {
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
-    if (prevColumns.length > 0) {
-      setColumns(prevColumns);
-    }
-    setPrevColumns([]);
+    // apiに配列をpostする（未実装）
     setActiveTask(undefined);
     setActiveColumn(undefined);
   };
@@ -248,7 +242,7 @@ const Board = () => {
           overflowX: "auto",
         }}
       >
-        <Columns columns={displayColumns} setColumns={setColumns} />
+        <Columns columns={columns} setColumns={setColumns} />
       </div>
       {activeTask || activeColumn ? (
         <DragOverlay>
