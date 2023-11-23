@@ -17,7 +17,7 @@ const TaskDetailsModal = () => {
   if (!modalTask) return null;
 
   const task = modalTask.task;
-  const columnTitle = modalTask.columnTitle;
+  const columnTitle = modalTask.columnName;
   const modalContentStyle: { [key: string]: number | string } = {
     position: "relative",
     zIndex: 10,
