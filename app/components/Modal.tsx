@@ -7,7 +7,7 @@ type ModalProps = {
 };
 
 const Modal: React.FC<ModalProps> = ({ children, onClose }) => {
-  const onMaskClick = (e: any) => {
+  const onMaskClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
