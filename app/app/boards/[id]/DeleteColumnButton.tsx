@@ -4,6 +4,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { ColumnType } from "@/types/board-data";
 import { useRecoilState } from "recoil";
 import { columnsState } from "@/recoils/atoms/boardState";
+import axios from "axios";
 
 type DeleteColumnBottonProps = {
   column: ColumnType;
@@ -11,9 +12,19 @@ type DeleteColumnBottonProps = {
 
 const DeleteColumnButton = ({ column }: DeleteColumnBottonProps) => {
   const [columns, setColumns] = useRecoilState(columnsState);
-  const handleDelete = () => {
-    const newColumns = columns.filter((col) => col.id !== column.id);
-    setColumns(newColumns);
+  const columnId = column.id.replace("column-", "");
+  const columnParams = { board_id: column.boardId };
+  const handleDelete = async () => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:3000/columns/${columnId}`,
+        { params: columnParams }
+      );
+      const newColumns = columns.filter((col) => col.id !== column.id);
+      setColumns(newColumns);
+    } catch (error) {
+      console.error("削除に失敗しました。", error);
+    }
   };
   return (
     <div

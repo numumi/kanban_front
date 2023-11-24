@@ -33,7 +33,6 @@ const AddColumnButton: React.FC<ColumnsProps> = (props) => {
   };
 
   const handleSave = async () => {
-    console.log("test111111")
     if (name === "") {
       setIsEditing(false);
       return;
