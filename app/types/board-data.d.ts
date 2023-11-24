@@ -7,11 +7,12 @@ export type TaskType = {
 export type ColumnType = {
   id: string;
   name: string;
+  boardId: number
   tasks: TaskType[];
 };
 
 type BoardType = {
-  id: string;
+  id: number;
   image: string;
   name: string;
   columns: ColumnType[];

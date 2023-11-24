@@ -242,7 +242,7 @@ const Board = () => {
           overflowX: "auto",
         }}
       >
-        <Columns columns={columns} setColumns={setColumns} />
+        <Columns columns={columns} setColumns={setColumns} boardId={boardId} />
       </div>
       {activeTask || activeColumn ? (
         <DragOverlay>

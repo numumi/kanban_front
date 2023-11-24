@@ -10,12 +10,13 @@ import Column from "./Column";
 import AddColumnButton from "./AddColumnButton";
 
 type ColumnsProps = {
+  boardId: number;
   columns: ColumnType[];
   setColumns: (columns: ColumnType[]) => void;
 };
 
 const Columns: FC<ColumnsProps> = (props) => {
-  const { columns, setColumns } = props;
+  const { boardId, columns, setColumns } = props;
   const { setNodeRef } = useDroppable({
     id: "board",
   });
@@ -33,7 +34,7 @@ const Columns: FC<ColumnsProps> = (props) => {
         {columns.map((column) => (
           <Column key={column.id} column={column} />
         ))}
-        <AddColumnButton columns={columns} setColumns={setColumns} />
+        <AddColumnButton columns={columns} setColumns={setColumns} boardId={boardId} />
       </div>
     </SortableContext>
   );

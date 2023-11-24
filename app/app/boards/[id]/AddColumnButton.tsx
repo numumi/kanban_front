@@ -3,27 +3,28 @@ import React, { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { ColumnType } from "@/types/board-data";
 import ClearIcon from "@mui/icons-material/Clear";
-import { v4 as uuid } from "uuid";
+
+import axios from "axios";
 
 type ColumnsProps = {
+  boardId: number;
   columns: ColumnType[];
   setColumns: (columns: ColumnType[]) => void;
 };
 
 const AddColumnButton: React.FC<ColumnsProps> = (props) => {
-  const { columns, setColumns } = props;
+  const { columns, setColumns, boardId } = props;
   const [isEditing, setIsEditing] = useState(false);
-  const [title, setTitle] = useState("");
-  const columnId = uuid();
+  const [name, setName] = useState("");
   const handleAddForm = () => {
     setIsEditing(true);
   };
   const handleFormCancel = () => {
-    setTitle("");
+    setName("");
     setIsEditing(false);
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
+    setName(e.target.value);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -31,19 +32,32 @@ const AddColumnButton: React.FC<ColumnsProps> = (props) => {
     handleSave();
   };
 
-  const handleSave = () => {
-    if (title === "") {
+  const handleSave = async () => {
+    console.log("test111111")
+    if (name === "") {
       setIsEditing(false);
       return;
     }
-    const newColumn = {
-      id: `column-${columnId}`,
-      title: title,
-      tasks: [],
+    const newColumnParams = {
+      name: name,
+      board_id: boardId,
     };
-    setColumns([...columns, newColumn]);
-    setTitle("");
-    setIsEditing(false);
+    try {
+      const response = await axios.post("http://localhost:3000/columns", newColumnParams);
+      const newColumn = {
+        id: `column-${response.data.id}`,
+        name: name,
+        boardId: boardId,
+        tasks: [],
+      };
+      setColumns([...columns, newColumn]);
+      setName("");
+      setIsEditing(false);
+    } catch (error) {
+      console.error("データの送信に失敗しました。", error);
+      setName("");
+      setIsEditing(false);
+    }
   };
 
   return (
@@ -57,7 +71,7 @@ const AddColumnButton: React.FC<ColumnsProps> = (props) => {
               onChange={handleChange}
               onBlur={handleSave}
               maxLength={15}
-              value={title}
+              value={name}
               autoFocus
               placeholder="タイトルを入力"
             />

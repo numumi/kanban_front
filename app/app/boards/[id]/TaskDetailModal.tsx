@@ -6,14 +6,14 @@ import ClearIcon from "@mui/icons-material/Clear";
 import {
   activeTaskState,
   modalTaskState,
-  tasksState,
+  // tasksState,
 } from "@/recoils/atoms/boardState";
 
 const TaskDetailsModal = () => {
   const setActiveTask = useSetRecoilState(activeTaskState);
   const [isEditing, setIsEditing] = useState(false);
   const [modalTask, setModalTask] = useRecoilState(modalTaskState);
-  const [tasks, setTasks] = useRecoilState(tasksState);
+  // const [tasks, setTasks] = useRecoilState(tasksState);
   if (!modalTask) return null;
 
   const task = modalTask.task;
@@ -43,6 +43,7 @@ const TaskDetailsModal = () => {
     setIsEditing(true); // 説明をクリックしたら編集モードに切り替える
   };
 
+  // 
   const handleDescriptionChange = (
     e: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
@@ -51,13 +52,13 @@ const TaskDetailsModal = () => {
       ...modalTask,
       task: updateTask,
     });
-    const updatedTasks: any = tasks.map((task) => {
-      if (task.id === modalTask.task.id) {
-        return updateTask;
-      }
-      return task;
-    });
-    setTasks(updatedTasks);
+    // const updatedTasks: any = tasks.map((task) => {
+    //   if (task.id === modalTask.task.id) {
+    //     return updateTask;
+    //   }
+    //   return task;
+    // });
+    // setTasks(updatedTasks);
     e.target.style.height = "inherit";
     e.target.style.height = `${e.target.scrollHeight}px`;
   };
