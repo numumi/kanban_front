@@ -3,9 +3,9 @@ import React, { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 import { ColumnType, TaskType } from "@/types/board-data";
-import { v4 as uuid } from "uuid";
 import { columnsState } from "@/recoils/atoms/boardState";
 import { useRecoilState } from "recoil";
+import axios from "axios";
 
 type ColumnProps = {
   column: ColumnType;
@@ -13,7 +13,6 @@ type ColumnProps = {
 const AddTaskButton: React.FC<ColumnProps> = (props) => {
   const { column } = props;
   const [isEditing, setIsEditing] = useState(false);
-  const taskId = uuid();
   const [taskInput, setTaskInput] = useState("");
   const [columns, setColumns] = useRecoilState(columnsState);
   const handleAddForm = () => {
@@ -25,24 +24,41 @@ const AddTaskButton: React.FC<ColumnProps> = (props) => {
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setTaskInput(e.target.value);
   };
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (taskInput === "") {
       return setIsEditing(false);
     }
-    const newTask: TaskType = {
-      id: `task-${taskId}`,
+
+    const newTaskParams = {
       name: taskInput,
+      column_id: column.id.replace("column-", ""),
     };
-    const newColumn = { ...column, tasks: [...column.tasks, newTask] };
-    const newColumns = columns.map((column) => {
-      if (column.id === newColumn.id) {
-        return newColumn;
-      }
-      return column;
-    });
-    setColumns(newColumns);
-    setTaskInput("");
-    setIsEditing(false);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/tasks",
+        newTaskParams
+      );
+      const newTask: TaskType = {
+        id: `task-${response.data.id}`,
+        name: taskInput,
+        description: "",
+      };
+      const newColumn = { ...column, tasks: [...column.tasks, newTask] };
+      const newColumns = columns.map((column) => {
+        if (column.id === newColumn.id) {
+          return newColumn;
+        }
+        return column;
+      });
+      setColumns(newColumns);
+      setTaskInput("");
+      setIsEditing(false);
+    } catch (error) {
+      console.error("データの送信に失敗しました。", error);
+      setTaskInput("");
+      setIsEditing(false);
+    }
   };
   return (
     <div>
