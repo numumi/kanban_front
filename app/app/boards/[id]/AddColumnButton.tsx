@@ -46,7 +46,7 @@ const AddColumnButton: React.FC<ColumnsProps> = (props) => {
       const newColumn = {
         id: `column-${response.data.id}`,
         name: name,
-        boardId: boardId,
+        board_id: boardId,
         tasks: [],
       };
       setColumns([...columns, newColumn]);

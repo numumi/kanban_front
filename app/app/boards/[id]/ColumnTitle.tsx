@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { ColumnType } from "@/types/board-data";
 import { useSetRecoilState } from "recoil";
 import { activeColumnState } from "@/recoils/atoms/boardState";
+import axios from "axios";
 
 type ColumnTitleProps = {
   column: ColumnType;
@@ -15,13 +16,19 @@ const ColumnTitle = ({ column, isEditing, setIsEditing }: ColumnTitleProps) => {
   const [newTitle, setNewTitle] = useState(title);
   const setActiveColumn = useSetRecoilState(activeColumnState);
 
+  const columnParams = {
+    id: column.id.replace("column-", ""),
+    name: newTitle,
+    board_id: column.board_id,
+  };
+
   const handleTitleClick = () => {
     setIsEditing(true);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log("handleChange");
-    setNewTitle(e.target.value);  
+    setNewTitle(e.target.value);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -29,12 +36,18 @@ const ColumnTitle = ({ column, isEditing, setIsEditing }: ColumnTitleProps) => {
     handleSave();
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    console.log("columnParams", columnParams);
     if (newTitle.trim() === "") {
       setNewTitle(title);
     } else {
+      try {
+        const url = `http://localhost:3000/columns/${columnParams.id}`;
+        await axios.patch(url, columnParams);
+      } catch (error) {
+        console.error("データの取得に失敗しました。", error);
+      }
       setTitle(newTitle);
-      // colimn tittle updateのリクエストを送る
     }
     setActiveColumn(undefined);
     setIsEditing(false);
