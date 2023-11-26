@@ -16,7 +16,7 @@ type TaskProps = {
 };
 
 const Task = ({ task, cursor, column }: TaskProps) => {
-  const [modalTask, setModalTask] = useRecoilState(modalTaskState);
+  const [modalTaskData, setModalTaskData] = useRecoilState(modalTaskState);
   const [isClearing, setIsClearing] = useState(false);
   const [columns, setColumns] = useRecoilState(columnsState);
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -48,11 +48,11 @@ const Task = ({ task, cursor, column }: TaskProps) => {
         },
       });
       console.log("response.data", response.data);
-      const _modalTask = {
+      const _modalTaskData = {
         task: response.data,
-        columnName: column.name,
+        column: column,
       };
-      setModalTask(_modalTask);
+      setModalTaskData(_modalTaskData);
     } catch (error) {
       console.error("データの取得に失敗しました。", error);
     }

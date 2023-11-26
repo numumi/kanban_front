@@ -1,23 +1,41 @@
-import React, { use, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 
 import Modal from "../../../components/Modal";
 import ClearIcon from "@mui/icons-material/Clear";
 import {
   activeTaskState,
+  columnsState,
   modalTaskState,
-  // tasksState,
 } from "@/recoils/atoms/boardState";
+import axios from "axios";
+import { TaskType } from "@/types/board-data";
 
 const TaskDetailsModal = () => {
   const setActiveTask = useSetRecoilState(activeTaskState);
-  const [isEditing, setIsEditing] = useState(false);
-  const [modalTask, setModalTask] = useRecoilState(modalTaskState);
-  // const [tasks, setTasks] = useRecoilState(tasksState);
-  if (!modalTask) return null;
+  const [isEditingDescription, setIsEditingDescription] = useState(false);
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [updateTask, setUpdateTask] = useState<TaskType | undefined>(undefined);
+  const [modalTaskData, setModalTaskData] = useRecoilState(modalTaskState);
+  const [columns, setColumns] = useRecoilState(columnsState);
 
-  const task = modalTask.task;
-  const columnTitle = modalTask.columnName;
+  useEffect(() => {
+    if (modalTaskData) {
+      setUpdateTask({
+        id: `task-${modalTaskData.task?.id}`,
+        name: modalTaskData.task.name,
+        description: modalTaskData.task.description,
+      });
+    }
+  }, [modalTaskData]);
+
+  if (!updateTask || !modalTaskData) return null;
+  const task = {
+    id: modalTaskData.task.id,
+    name: modalTaskData.task.name,
+    description: modalTaskData.task.description,
+  };
+  const columnTitle = modalTaskData.column.name;
   const modalContentStyle: { [key: string]: number | string } = {
     position: "relative",
     zIndex: 10,
@@ -33,38 +51,104 @@ const TaskDetailsModal = () => {
     marginTop: "70px",
     marginBottom: "70px",
   };
+  console.log("modalTaskData", modalTaskData);
+  const taskParams = {
+    id: updateTask.id.replace("task-", ""),
+    name: updateTask.name,
+    description: updateTask.description,
+    column_id: modalTaskData.column.id.replace("column-", ""),
+  };
 
   const onClose = () => {
     setActiveTask(undefined);
-    setModalTask(undefined);
+    setModalTaskData(undefined);
+  };
+
+  const handleTitleClick = () => {
+    setIsEditingTitle(true);
+  };
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUpdateTask({
+      ...updateTask,
+      name: e.target.value,
+    });
+  };
+
+  const handleTitleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (updateTask.name.trim() === "") {
+      setUpdateTask(task);
+      setIsEditingTitle(false);
+      return;
+    }
+    handleSave();
+  };
+
+  const handleTitleBlur = () => {
+    if (updateTask.name.trim() === "") {
+      setUpdateTask(task);
+      setIsEditingTitle(false);
+      return;
+    }
+    handleSave();
   };
 
   const handleDescriptionClick = () => {
-    setIsEditing(true); // 説明をクリックしたら編集モードに切り替える
+    setIsEditingDescription(true); // 説明をクリックしたら編集モードに切り替える
   };
 
-  // 
+  //
   const handleDescriptionChange = (
     e: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
-    const updateTask = { ...modalTask.task, description: e.target.value };
-    setModalTask({
-      ...modalTask,
-      task: updateTask,
+    setUpdateTask({
+      ...updateTask,
+      description: e.target.value,
     });
-    // const updatedTasks: any = tasks.map((task) => {
-    //   if (task.id === modalTask.task.id) {
-    //     return updateTask;
-    //   }
-    //   return task;
-    // });
-    // setTasks(updatedTasks);
     e.target.style.height = "inherit";
     e.target.style.height = `${e.target.scrollHeight}px`;
   };
 
   const handleDescriptionBlur = () => {
-    setIsEditing(false); // フォームからフォーカスが外れたら編集モードを終了する
+    if (updateTask.description?.trim() === "") {
+      setUpdateTask(task);
+      setIsEditingDescription(false);
+      return;
+    }
+    handleSave();
+  };
+
+  const handleSave = async () => {
+    try {
+      const url = `http://localhost:3000/tasks/${taskParams.id}`;
+      await axios.patch(url, taskParams);
+    } catch (error) {
+      console.error("データの取得に失敗しました。", error);
+    }
+    setModalTaskData({
+      ...modalTaskData,
+      task: updateTask,
+    });
+    const newColumns = columns.map((_column) => {
+      if (_column.id !== modalTaskData.column.id) {
+        return _column;
+      }
+      return {
+        ..._column,
+        tasks: _column.tasks.map((_task) => {
+          console.log("_column", _column);
+          console.log("updateTask", updateTask);
+          if (_task.id !== updateTask.id) {
+            return _task;
+          }
+          return updateTask;
+        }),
+      };
+    });
+    console.log("newColumns", newColumns);
+    setColumns(newColumns);
+    setIsEditingTitle(false);
   };
 
   return (
@@ -77,14 +161,31 @@ const TaskDetailsModal = () => {
           >
             <ClearIcon className="cursor-pointer cursor-pointer hover:bg-gray-300" />
           </div>
-          <h2 className="font-bold">{task.name}</h2>
+
+          <div>
+            {isEditingTitle ? (
+              <form onSubmit={handleTitleSubmit}>
+                <input
+                  type="text"
+                  value={updateTask.name}
+                  onChange={handleTitleChange}
+                  onBlur={handleTitleBlur}
+                  autoFocus
+                />
+              </form>
+            ) : (
+              <h2 className="font-bold" onClick={handleTitleClick}>
+                {task.name}
+              </h2>
+            )}
+          </div>
           <div className="text-sm text-gray-500 mb-2">{columnTitle}</div>
           <div className=" cursor-pointer" onClick={handleDescriptionClick}>
-            {isEditing ? (
+            {isEditingDescription ? (
               <div className="w-full h-full bg-white border-gray-200 hover:border-blue-500">
                 <textarea
                   className="bg-white w-full h-full p-2 min-h-[8rem] border-none overflow-hidden"
-                  value={task.description}
+                  value={updateTask.description}
                   onChange={handleDescriptionChange}
                   onBlur={handleDescriptionBlur}
                   style={{ height: "auto" }}

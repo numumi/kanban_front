@@ -18,7 +18,7 @@ export const columnsState = atom<ColumnType[]>({
 // モーダルで表示するタスクの初期データ
 type ModalTaskType = {
   task: TaskType;
-  columnName: string | undefined;
+  column: ColumnType;
 };
 
 export const modalTaskState = atom<ModalTaskType | undefined>({
