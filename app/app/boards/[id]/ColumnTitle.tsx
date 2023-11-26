@@ -27,7 +27,6 @@ const ColumnTitle = ({ column, isEditing, setIsEditing }: ColumnTitleProps) => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("handleChange");
     setNewTitle(e.target.value);
   };
 
@@ -37,7 +36,6 @@ const ColumnTitle = ({ column, isEditing, setIsEditing }: ColumnTitleProps) => {
   };
 
   const handleSave = async () => {
-    console.log("columnParams", columnParams);
     if (newTitle.trim() === "") {
       setNewTitle(title);
     } else {
