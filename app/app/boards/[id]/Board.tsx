@@ -248,26 +248,28 @@ const Board = () => {
       const url = `http://localhost:3000/tasks/${taskParams.id}/move`;
       const response = await axios.put(url, taskParams);
       console.log("response", response);
-      const newTaskId = `task-${response.data.newTaskId}`;
-      const destinationColumnId = `column-${response.data.destinationColumnId}`;
-      const newColumns = columns.map((column) => {
-        if (column.id === destinationColumnId) {
-          return {
-            ...column,
-            tasks: column.tasks.map((task) => {
-              if (task.id === activeTask.id) {
-                return {
-                  ...task,
-                  id: newTaskId,
-                };
-              }
-              return task;
-            }),
-          };
-        }
-        return column;
-      });
-      setColumns(newColumns);
+      if (response.data.newTaskId) {
+        const newTaskId = `task-${response.data.newTaskId}`;
+        const destinationColumnId = `column-${response.data.destinationColumnId}`;
+        const newColumns = columns.map((column) => {
+          if (column.id === destinationColumnId) {
+            return {
+              ...column,
+              tasks: column.tasks.map((task) => {
+                if (task.id === activeTask.id) {
+                  return {
+                    ...task,
+                    id: newTaskId,
+                  };
+                }
+                return task;
+              }),
+            };
+          }
+          return column;
+        });
+        setColumns(newColumns);
+      }
     } catch (error) {
       console.error("データの取得に失敗しました。", error);
     }
