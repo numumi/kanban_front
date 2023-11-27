@@ -1,9 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import {
-  useRecoilState,
-  useRecoilValueLoadable,
-} from "recoil";
+import { useRecoilState, useRecoilValueLoadable } from "recoil";
 import {
   activeColumnState,
   activeTaskState,
@@ -29,6 +26,7 @@ import Columns from "./Columns";
 import Column from "./Column";
 import { useParams } from "next/navigation";
 import fetchBoardData from "@/recoils/selectors/fetchBoardData";
+import axios from "axios";
 
 type CustomDragOverEvent = DragOverEvent & {
   activatorEvent: {
@@ -43,7 +41,8 @@ const Board = () => {
   const [columns, setColumns] = useRecoilState(columnsState);
   const [activeTask, setActiveTask] = useRecoilState(activeTaskState);
   const [activeColumn, setActiveColumn] = useRecoilState(activeColumnState);
-
+  const [isDragging, setIsDragging] = useState(false);
+  const [taskParams, setTaskParams] = useState({});
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
   useEffect(() => {
@@ -155,13 +154,26 @@ const Board = () => {
       }
       return column;
     });
+
+    const newPosition = () => {
+      const updatedColumn = newColumns.find(
+        (column) => column.id === overColumnId
+      );
+      if (!updatedColumn) return null;
+      return updatedColumn.tasks.findIndex((task) => task.id === id);
+    };
+    setIsDragging(true);
+    setTaskParams({
+      id: id.replace("task-", ""),
+      position: newPosition(),
+      source_column_id: activeColumnId.replace("column-", ""),
+      destination_column_id: overColumnId.replace("column-", ""),
+    });
     setColumns(newColumns);
   };
 
   const columnReorder = (event: CustomDragOverEvent) => {
     const { active, over } = event;
-    console.log("active:", active); // activeの値をログに出力
-    console.log("over:", over); // overの値をログに出力
     const id = active.id.toString();
     const overId = over?.id;
     if (!overId) return;
@@ -176,6 +188,7 @@ const Board = () => {
       newColumns[overIndex],
       newColumns[activeIndex],
     ];
+    setIsDragging(true);
     setColumns(newColumns);
   };
 
@@ -203,7 +216,7 @@ const Board = () => {
   const handleDragOver = (event: CustomDragOverEvent) => {
     setTimeout(() => {
       if (!activeTask && !activeColumn) return;
-      
+
       const id = event.active.id.toString();
 
       // idがtaskから始まる場合、taskの移動処理
@@ -217,9 +230,61 @@ const Board = () => {
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
-    // apiに配列をpostする（未実装）
-    setActiveTask(undefined);
-    setActiveColumn(undefined);
+    if (!isDragging) return;
+    if (activeTask) {
+      saveTaskReorder();
+      setActiveTask(undefined);
+    } else if (activeColumn) {
+      saveColumnReorder();
+      setActiveColumn(undefined);
+    }
+    setIsDragging(false);
+  };
+
+  const saveTaskReorder = async () => {
+    if (!activeTask) return;
+    console.log("taskParams", taskParams);
+    try {
+      const url = `http://localhost:3000/tasks/${taskParams.id}/move`;
+      const response = await axios.put(url, taskParams);
+      console.log("response", response);
+      const newTaskId = `task-${response.data.newTaskId}`;
+      const destinationColumnId = `column-${response.data.destinationColumnId}`;
+      const newColumns = columns.map((column) => {
+        if (column.id === destinationColumnId) {
+          return {
+            ...column,
+            tasks: column.tasks.map((task) => {
+              if (task.id === activeTask.id) {
+                return {
+                  ...task,
+                  id: newTaskId,
+                };
+              }
+              return task;
+            }),
+          };
+        }
+        return column;
+      });
+      setColumns(newColumns);
+    } catch (error) {
+      console.error("データの取得に失敗しました。", error);
+    }
+  };
+
+  const saveColumnReorder = async () => {
+    const columnParams = {
+      ids: columns.map((column) => column.id.replace("column-", "")),
+    };
+    console.log("columnParams", columnParams);
+    try {
+      const url = `http://localhost:3000/columns/move`;
+      const response = await axios.put(url, columnParams);
+      console.log("response", response);
+    } catch (error) {
+      console.error("データの取得に失敗しました。", error);
+    }
   };
 
   if (!board || !columns) return <div>Loading...</div>;
