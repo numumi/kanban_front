@@ -6,9 +6,10 @@ const fetchBoardData = selectorFamily<BoardType, number>({
   key: "fetchBoardData",
   get: (id) => async () => {
     try {
+      console.log(process.env.NEXT_PUBLIC_PROD_API_URL);
       const url =
         process.env.NODE_ENV === "production"
-          ? `${process.env.PROD_API_URL}board/${id}`
+          ? `${process.env.NEXT_PUBLIC_PROD_API_URL}board/${id}`
           : `http://localhost:3000/board/${id}`;
       const response = await axios.get(url);
       const data = {

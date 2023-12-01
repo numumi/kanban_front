@@ -40,9 +40,10 @@ const ColumnTitle = ({ column, isEditing, setIsEditing }: ColumnTitleProps) => {
       setNewTitle(title);
     } else {
       try {
-        const url = process.env.NODE_ENV === "production"
-        ? `${process.env.PROD_API_URL}columns`
-        : `http://localhost:3000/columns/${columnParams.id}`;
+        const url =
+          process.env.NODE_ENV === "production"
+            ? `${process.env.NEXT_PUBLIC_PROD_API_URL}columns`
+            : `http://localhost:3000/columns/${columnParams.id}`;
         await axios.patch(url, columnParams);
       } catch (error) {
         console.error("データの取得に失敗しました。", error);

@@ -5,7 +5,6 @@
 - dnd-kitのcontext内ではintercepting routeが使えないため bodyタグにモーダルを描写
 
 ### 課題
-- APIからデータfetch
 - APIとWebSocket通信
 - テスト
 - ESLint
@@ -14,3 +13,6 @@
 
 ### URL  
 https://kanban-front-one.vercel.app/
+
+### APIのリポジトリ
+https://github.com/numumi/kanban_api

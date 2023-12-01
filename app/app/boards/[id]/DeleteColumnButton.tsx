@@ -18,7 +18,7 @@ const DeleteColumnButton = ({ column }: DeleteColumnBottonProps) => {
     try {
       const url =
         process.env.NODE_ENV === "production"
-          ? `${process.env.PROD_API_URL}columns/${columnId}`
+          ? `${process.env.NEXT_PUBLIC_PROD_API_URL}columns/${columnId}`
           : `http://localhost:3000/columns/${columnId}`;
       const response = await axios.delete(url, { params: columnParams });
       const newColumns = columns.filter((col) => col.id !== column.id);

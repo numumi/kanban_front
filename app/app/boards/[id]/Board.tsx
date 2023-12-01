@@ -260,7 +260,7 @@ const Board = () => {
     try {
       const url =
         process.env.NODE_ENV === "production"
-          ? `${process.env.PROD_API_URL}tasks/${taskId}/move`
+          ? `${process.env.NEXT_PUBLIC_PROD_API_URL}tasks/${taskId}/move`
           : `http://localhost:3000/tasks/${taskId}/move`;
       const response = await axios.put(url, taskParams);
       console.log("response", response);
@@ -299,7 +299,7 @@ const Board = () => {
     try {
       const url =
         process.env.NODE_ENV === "production"
-          ? `${process.env.PROD_API_URL}columns/move`
+          ? `${process.env.NEXT_PUBLIC_PROD_API_URL}columns/move`
           : `http://localhost:3000/columns/move`;
       const response = await axios.put(url, columnParams);
       console.log("response", response);

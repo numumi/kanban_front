@@ -123,7 +123,7 @@ const TaskDetailsModal = () => {
     try {
       const url =
         process.env.NODE_ENV === "production"
-          ? `${process.env.PROD_API_URL}tasks/${taskParams.id}`
+          ? `${process.env.NEXT_PUBLIC_PROD_API_URL}tasks/${taskParams.id}`
           : `http://localhost:3000/tasks/${taskParams.id}`;
       await axios.patch(url, taskParams);
     } catch (error) {
