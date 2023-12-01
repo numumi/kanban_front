@@ -17,7 +17,7 @@ const Header = () => {
       </Link>
 
       {/* 検索フォーム */}
-      <div className="relative mx-4">
+      {/* <div className="relative mx-4">
         <input
           type="text"
           placeholder="Search"
@@ -26,18 +26,15 @@ const Header = () => {
         <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500">
           <SearchIcon />
         </button>
-      </div>
+      </div> */}
 
-      <div className="flex items-center space-x-4">
-        {/* 通知アイコン */}
+      {/* <div className="flex items-center space-x-4">
         <NotificationsIcon className="text-white text-2xl cursor-pointer" />
 
-        {/* 設定アイコン */}
         <SettingsIcon className="text-white text-2xl cursor-pointer" />
 
-        {/* ユーザーアイコン */}
         <AccountCircleIcon className="text-white text-2xl cursor-pointer" />
-      </div>
+      </div> */}
     </header>
   );
 };

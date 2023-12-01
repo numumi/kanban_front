@@ -35,10 +35,11 @@ const AddTaskButton: React.FC<ColumnProps> = (props) => {
     };
 
     try {
-      const response = await axios.post(
-        "http://localhost:3000/tasks",
-        newTaskParams
-      );
+      const url =
+        process.env.NODE_ENV === "production"
+          ? `${process.env.PROD_API_URL}tasks`
+          : `http://localhost:3000/tasks`;
+      const response = await axios.post(url, newTaskParams);
       const newTask: TaskType = {
         id: `task-${response.data.id}`,
         name: taskInput,

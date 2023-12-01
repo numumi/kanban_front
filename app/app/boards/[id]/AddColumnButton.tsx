@@ -42,7 +42,11 @@ const AddColumnButton: React.FC<ColumnsProps> = (props) => {
       board_id: boardId,
     };
     try {
-      const response = await axios.post("http://localhost:3000/columns", newColumnParams);
+      const url =
+        process.env.NODE_ENV === "production"
+          ? `${process.env.PROD_API_URL}columns`
+          : `http://localhost:3000/columns`;
+      const response = await axios.post(url, newColumnParams);
       const newColumn = {
         id: `column-${response.data.id}`,
         name: name,

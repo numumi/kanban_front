@@ -1,5 +1,3 @@
-import boardData from "../../public/data/board-data.json";
-
 import { atom } from "recoil";
 import BoardType, { ColumnType, TaskType } from "../../types/board-data"; // 上記で定義した型定義をインポート
 
@@ -34,4 +32,9 @@ export const activeTaskState = atom<TaskType | undefined>({
 export const activeColumnState = atom<ColumnType | undefined>({
   key: "activeColumn",
   default: undefined,
+});
+
+export const selectedBoardIdState = atom<number | null>({
+  key: "selectedBoardId",
+  default: 0,
 });

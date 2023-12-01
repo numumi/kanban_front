@@ -1,11 +1,16 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValueLoadable } from "recoil";
+import React, { use, useEffect, useState } from "react";
+import {
+  useRecoilState,
+  useRecoilValueLoadable,
+  useSetRecoilState,
+} from "recoil";
 import {
   activeColumnState,
   activeTaskState,
   boardState,
   columnsState,
+  selectedBoardIdState,
 } from "@/recoils/atoms/boardState";
 import {
   DndContext,
@@ -55,6 +60,13 @@ const Board = () => {
   useEffect(() => {
     setColumns(columns);
   }, [columns]);
+
+  useEffect(() => {
+    if (boardDataLoadable.state === "hasValue") {
+      setBoard(boardDataLoadable.contents);
+      setColumns(boardDataLoadable.contents.columns);
+    }
+  }, [boardId]);
 
   // 特定のtaskIdを持つタスクを検索する関数:
   const findTask = (taskId: string) => {
@@ -243,9 +255,13 @@ const Board = () => {
 
   const saveTaskReorder = async () => {
     if (!activeTask) return;
+    const taskId = activeTask.id.replace("task-", "");
     console.log("taskParams", taskParams);
     try {
-      const url = `http://localhost:3000/tasks/${taskParams.id}/move`;
+      const url =
+        process.env.NODE_ENV === "production"
+          ? `${process.env.PROD_API_URL}tasks/${taskId}/move`
+          : `http://localhost:3000/tasks/${taskId}/move`;
       const response = await axios.put(url, taskParams);
       console.log("response", response);
       if (response.data.newTaskId) {
@@ -281,7 +297,10 @@ const Board = () => {
     };
     console.log("columnParams", columnParams);
     try {
-      const url = `http://localhost:3000/columns/move`;
+      const url =
+        process.env.NODE_ENV === "production"
+          ? `${process.env.PROD_API_URL}columns/move`
+          : `http://localhost:3000/columns/move`;
       const response = await axios.put(url, columnParams);
       console.log("response", response);
     } catch (error) {

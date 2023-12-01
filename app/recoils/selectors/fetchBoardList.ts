@@ -5,7 +5,11 @@ import { Board } from "@/types/board-list";
 export const fetchBoardList = selector<Board[]>({
   key: "FetchBoardList",
   get: async () => {
-    const url = "http://localhost:3000/";
+    const url =
+      process.env.NODE_ENV === "production"
+        ? process.env.PROD_API_URL
+        : "http://localhost:3000/";
+    if (!url) throw new Error("API URLが設定されていません");
     const response = await axios.get(url);
     return response.data;
   },
