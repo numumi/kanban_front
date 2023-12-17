@@ -1,16 +1,11 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
-import {
-  useRecoilState,
-  useRecoilValueLoadable,
-  useSetRecoilState,
-} from "recoil";
+import React, { useEffect, useState } from "react";
+import { useRecoilState, useRecoilValueLoadable } from "recoil";
 import {
   activeColumnState,
   activeTaskState,
   boardState,
   columnsState,
-  selectedBoardIdState,
 } from "@/recoils/atoms/boardState";
 import {
   DndContext,
@@ -51,7 +46,10 @@ const Board = () => {
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
   useEffect(() => {
-    if (boardDataLoadable.state === "hasValue") {
+    if (
+      boardDataLoadable.state === "hasValue" &&
+      JSON.stringify(boardDataLoadable.contents) !== JSON.stringify(board)
+    ) {
       setBoard(boardDataLoadable.contents);
       setColumns(boardDataLoadable.contents.columns);
     }
@@ -320,6 +318,7 @@ const Board = () => {
       onDragEnd={handleDragEnd}
     >
       <div
+        data-testid="boardBody"
         className="p-5"
         style={{
           backgroundImage: `url(${board.image})`,
