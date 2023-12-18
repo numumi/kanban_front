@@ -5,8 +5,8 @@
 - dnd-kitのcontext内ではintercepting routeが使えないため bodyタグにモーダルを描写
 
 ### 課題
-- APIとWebSocket通信
-- テスト
+- WebSocket通信
+- テスト()
 - ESLint
 - エラーハンドリング
 - ユーザー認証、認可
