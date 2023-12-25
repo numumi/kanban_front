@@ -64,7 +64,7 @@ const AddColumnButton: React.FC<ColumnsProps> = (props) => {
   };
 
   return (
-    <div>
+    <div data-testid="addColumn">
       {isEditing ? (
         <div className="w-60 h-20 p-2 m-2 bg-gray-200 rounded">
           <form onSubmit={handleSubmit}>

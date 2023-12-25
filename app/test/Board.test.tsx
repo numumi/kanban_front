@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import { RecoilRoot} from "recoil";
-import Board from "./Board";
-import '@testing-library/jest-dom';
+import { RecoilRoot } from "recoil";
+import Board from "@/app/boards/[id]/Board";
+import "@testing-library/jest-dom";
 
 jest.mock("next/navigation", () => ({
   ...jest.requireActual("next/navigation"), // 他のnext/navigation機能はそのまま使用
@@ -17,12 +17,13 @@ jest.mock("recoil", () => ({
       state: "hasValue",
       contents: {
         id: 1,
-        image: "../../../public/wood-texture_00003.jpg",
+        image: "./public/wood-texture_00003.jpg",
         name: "Board 1",
         columns: [
           {
             id: "column-1",
             name: "To Do",
+            board_id: 1,
             tasks: [
               {
                 id: "task-1",
@@ -44,6 +45,7 @@ jest.mock("recoil", () => ({
           {
             id: "column-2",
             name: "In Progress",
+            board_id: 1,
             tasks: [
               {
                 id: "task-4",
@@ -51,6 +53,7 @@ jest.mock("recoil", () => ({
                 description: "進捗報告詳細",
               },
               {
+                id: "task-5",
                 name: "調査中",
                 description: "調査中詳細",
               },
@@ -59,14 +62,15 @@ jest.mock("recoil", () => ({
           {
             id: "column-3",
             name: "Done",
+            board_id: 1,
             tasks: [
               {
-                id: "task-5",
+                id: "task-6",
                 name: "納品完了",
                 description: "納品完了詳細",
               },
               {
-                id: "task-6",
+                id: "task-7",
                 name: "修正対応",
                 description: "修正対応詳細",
               },
@@ -78,7 +82,7 @@ jest.mock("recoil", () => ({
   }),
 }));
 
-test("should render with correct background image", () => {
+test("Boardの背景画像が表示されている", () => {
   render(
     <RecoilRoot>
       <Board />
@@ -87,7 +91,31 @@ test("should render with correct background image", () => {
 
   const container = screen.getByTestId("boardBody");
 
-  expect(container).toHaveStyle('background-image: url(../../../public/wood-texture_00003.jpg)');
+  expect(container).toHaveStyle(
+    "background-image: url(./public/wood-texture_00003.jpg)"
+  );
 });
 
+test("Columnがレンダリングされている", () => {
+  render(
+    <RecoilRoot>
+      <Board />
+    </RecoilRoot>
+  );
 
+  const container = screen.getByTestId("boardBody");
+
+  expect(container).toHaveTextContent("To Do");
+});
+
+test("Taskがレンダリングされている", () => {
+  render(
+    <RecoilRoot>
+      <Board />
+    </RecoilRoot>
+  );
+
+  const container = screen.getByTestId("boardBody");
+
+  expect(container).toHaveTextContent("発注書");
+});

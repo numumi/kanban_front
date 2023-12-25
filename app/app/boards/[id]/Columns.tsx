@@ -28,6 +28,7 @@ const Columns: FC<ColumnsProps> = (props) => {
     >
       <div
         className="flex"
+        data-testid="columns"
         style={{ minHeight: "100px" }}
         ref={setNodeRef}
       >
