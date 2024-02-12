@@ -1,5 +1,12 @@
 import { atom } from "recoil";
 import BoardType, { ColumnType, TaskType } from "../../types/board-data"; // 上記で定義した型定義をインポート
+import { Board } from "@/types/board-list";
+
+// ボードリストの初期データ
+export const boardsState = atom<Board[]>({
+  key: "boards",
+  default: [],
+});
 
 // ボードの初期データ
 export const boardState = atom<BoardType>({

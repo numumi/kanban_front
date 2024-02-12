@@ -1,13 +1,13 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import BoardCard from "./BoardCard";
-import { useRecoilValue } from "recoil";
-import { Board } from "@/types/board-list";
+import { useRecoilState, useRecoilValue } from "recoil";
 import tokenState from "@/recoils/atoms/tokenState";
 import axios from "axios";
+import { boardsState } from "@/recoils/atoms/boardState";
 
 const BoardList = () => {
-  const [boardList, setBoadList] = useState<Board[]>();
+  const [boardList, setBoadList] = useRecoilState(boardsState);
   const token = useRecoilValue(tokenState);
 
   useEffect(() => {
