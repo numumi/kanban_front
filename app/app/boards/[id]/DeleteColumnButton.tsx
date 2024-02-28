@@ -2,9 +2,10 @@
 import React from "react";
 import ClearIcon from "@mui/icons-material/Clear";
 import { ColumnType } from "@/types/board-data";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { columnsState } from "@/recoils/atoms/boardState";
 import axios from "axios";
+import tokenState from "@/recoils/atoms/tokenState";
 
 type DeleteColumnBottonProps = {
   column: ColumnType;
@@ -12,15 +13,19 @@ type DeleteColumnBottonProps = {
 
 const DeleteColumnButton = ({ column }: DeleteColumnBottonProps) => {
   const [columns, setColumns] = useRecoilState(columnsState);
-  const columnId = column.id.replace("column-", "");
+  const columnId = String(column.id).replace("column-", "");
   const columnParams = { board_id: column.board_id };
+  const token = useRecoilValue(tokenState);
   const handleDelete = async () => {
     try {
-      const url =
-        process.env.NODE_ENV === "production"
-          ? `${process.env.NEXT_PUBLIC_PROD_API_URL}columns/${columnId}`
-          : `http://localhost:3000/columns/${columnId}`;
-      const response = await axios.delete(url, { params: columnParams });
+      const url = `${process.env.NEXT_PUBLIC_API_URL}columns/${columnId}`;
+
+      const response = await axios.delete(url, {
+        params: columnParams,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const newColumns = columns.filter((col) => col.id !== column.id);
       setColumns(newColumns);
     } catch (error) {

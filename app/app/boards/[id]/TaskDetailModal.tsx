@@ -1,5 +1,5 @@
 import React, { use, useEffect, useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import Modal from "../../../components/Modal";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -10,6 +10,7 @@ import {
 } from "@/recoils/atoms/boardState";
 import axios from "axios";
 import { TaskType } from "@/types/board-data";
+import tokenState from "@/recoils/atoms/tokenState";
 
 const TaskDetailsModal = () => {
   const setActiveTask = useSetRecoilState(activeTaskState);
@@ -18,6 +19,7 @@ const TaskDetailsModal = () => {
   const [updateTask, setUpdateTask] = useState<TaskType | undefined>(undefined);
   const [modalTaskData, setModalTaskData] = useRecoilState(modalTaskState);
   const [columns, setColumns] = useRecoilState(columnsState);
+  const token = useRecoilValue(tokenState);
 
   useEffect(() => {
     if (modalTaskData) {
@@ -53,10 +55,10 @@ const TaskDetailsModal = () => {
   };
   console.log("modalTaskData", modalTaskData);
   const taskParams = {
-    id: updateTask.id.replace("task-", ""),
+    id: String(updateTask.id).replace("task-", ""),
     name: updateTask.name,
     description: updateTask.description,
-    column_id: modalTaskData.column.id.replace("column-", ""),
+    column_id: String(modalTaskData.column.id).replace("column-", ""),
   };
 
   const onClose = () => {
@@ -121,11 +123,12 @@ const TaskDetailsModal = () => {
 
   const handleSave = async () => {
     try {
-      const url =
-        process.env.NODE_ENV === "production"
-          ? `${process.env.NEXT_PUBLIC_PROD_API_URL}tasks/${taskParams.id}`
-          : `http://localhost:3000/tasks/${taskParams.id}`;
-      await axios.patch(url, taskParams);
+      const url = `${process.env.NEXT_PUBLIC_API_URL}tasks/${taskParams.id}`;
+      await axios.patch(url, taskParams, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
     } catch (error) {
       console.error("データの取得に失敗しました。", error);
     }

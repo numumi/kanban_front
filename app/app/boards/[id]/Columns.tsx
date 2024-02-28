@@ -20,6 +20,7 @@ const Columns: FC<ColumnsProps> = (props) => {
   const { setNodeRef } = useDroppable({
     id: "board",
   });
+  console.log("columns", columns);
   return (
     <SortableContext
       id="board"

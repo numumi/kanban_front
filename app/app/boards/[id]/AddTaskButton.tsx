@@ -4,8 +4,9 @@ import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 import { ColumnType, TaskType } from "@/types/board-data";
 import { columnsState } from "@/recoils/atoms/boardState";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import axios from "axios";
+import tokenState from "@/recoils/atoms/tokenState";
 
 type ColumnProps = {
   column: ColumnType;
@@ -15,6 +16,8 @@ const AddTaskButton: React.FC<ColumnProps> = (props) => {
   const [isEditing, setIsEditing] = useState(false);
   const [taskInput, setTaskInput] = useState("");
   const [columns, setColumns] = useRecoilState(columnsState);
+  const token = useRecoilValue(tokenState);
+
   const handleAddForm = () => {
     setIsEditing(true);
   };
@@ -30,16 +33,20 @@ const AddTaskButton: React.FC<ColumnProps> = (props) => {
     }
 
     const newTaskParams = {
-      name: taskInput,
+      task: {
+        name: taskInput,
+      },
       column_id: column.id.replace("column-", ""),
     };
 
     try {
-      const url =
-        process.env.NODE_ENV === "production"
-          ? `${process.env.NEXT_PUBLIC_PROD_API_URL}tasks`
-          : `http://localhost:3000/tasks`;
-      const response = await axios.post(url, newTaskParams);
+      const url = `${process.env.NEXT_PUBLIC_API_URL}tasks`;
+      const response = await axios.post(url, newTaskParams, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       const newTask: TaskType = {
         id: `task-${response.data.id}`,
         name: taskInput,

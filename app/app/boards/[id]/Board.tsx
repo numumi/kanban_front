@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValueLoadable } from "recoil";
+import { useRecoilState, useRecoilValue, useRecoilValueLoadable } from "recoil";
 import {
   activeColumnState,
   activeTaskState,
@@ -25,8 +25,8 @@ import { ColumnType } from "@/types/board-data";
 import Columns from "./Columns";
 import Column from "./Column";
 import { useParams } from "next/navigation";
-import fetchBoardData from "@/recoils/selectors/fetchBoardData";
 import axios from "axios";
+import tokenState from "@/recoils/atoms/tokenState";
 
 type CustomDragOverEvent = DragOverEvent & {
   activatorEvent: {
@@ -36,7 +36,6 @@ type CustomDragOverEvent = DragOverEvent & {
 
 const Board = () => {
   const boardId = Number(useParams().id);
-  const boardDataLoadable = useRecoilValueLoadable(fetchBoardData(boardId));
   const [board, setBoard] = useRecoilState(boardState);
   const [columns, setColumns] = useRecoilState(columnsState);
   const [activeTask, setActiveTask] = useRecoilState(activeTaskState);
@@ -44,27 +43,45 @@ const Board = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [taskParams, setTaskParams] = useState({});
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
+  const token = useRecoilValue(tokenState);
 
+  // ボード情報を取得する
   useEffect(() => {
-    if (
-      boardDataLoadable.state === "hasValue" &&
-      JSON.stringify(boardDataLoadable.contents) !== JSON.stringify(board)
-    ) {
-      setBoard(boardDataLoadable.contents);
-      setColumns(boardDataLoadable.contents.columns);
-    }
-  }, [boardDataLoadable]);
+    if (!token) return;
+    const fetchBoardList = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/board/${boardId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("response", response);
+        const data = {
+          ...response.data,
+          columns: response.data.columns.map((column: ColumnType) => ({
+            ...column,
+            id: `column-${column.id}`,
+            tasks: column.tasks.map((task) => ({
+              ...task,
+              id: `task-${task.id}`,
+            })),
+          })),
+        };
+        setBoard(data);
+        setColumns(data.columns);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchBoardList();
+  }, [token, boardId]);
 
   useEffect(() => {
     setColumns(columns);
   }, [columns]);
-
-  useEffect(() => {
-    if (boardDataLoadable.state === "hasValue") {
-      setBoard(boardDataLoadable.contents);
-      setColumns(boardDataLoadable.contents.columns);
-    }
-  }, [boardId]);
 
   // 特定のtaskIdを持つタスクを検索する関数:
   const findTask = (taskId: string) => {
@@ -174,10 +191,12 @@ const Board = () => {
     };
     setIsDragging(true);
     setTaskParams({
-      id: id.replace("task-", ""),
+      id: parseInt(String(id).replace("task-", "")),
       position: newPosition(),
-      source_column_id: activeColumnId.replace("column-", ""),
-      destination_column_id: overColumnId.replace("column-", ""),
+      source_column_id: parseInt(String(activeColumnId).replace("column-", "")),
+      destination_column_id: parseInt(
+        String(overColumnId).replace("column-", "")
+      ),
     });
     setColumns(newColumns);
   };
@@ -205,14 +224,17 @@ const Board = () => {
   // ドラッグ開始時に発火する関数
   const handleDragStart = (event: DragStartEvent) => {
     setTimeout(() => {
+      console.log("handleDragStart");
       const { active } = event;
       // ドラッグしたリソースのid
       const id = active.id.toString();
+      console.log("id", id);
       if (id.startsWith("task")) {
         const task = findTask(id);
 
         if (task) {
           setActiveTask(task);
+          console.log("activeTask1", activeTask);
         }
       } else if (id.startsWith("column")) {
         const column = columns.find((column) => column.id === id);
@@ -225,6 +247,7 @@ const Board = () => {
 
   const handleDragOver = (event: CustomDragOverEvent) => {
     setTimeout(() => {
+      console.log("handleDragOver");
       if (!activeTask && !activeColumn) return;
 
       const id = event.active.id.toString();
@@ -240,6 +263,7 @@ const Board = () => {
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
+    console.log("handleDragEnd");
     if (!isDragging) return;
     if (activeTask) {
       saveTaskReorder();
@@ -256,11 +280,13 @@ const Board = () => {
     const taskId = activeTask.id.replace("task-", "");
     console.log("taskParams", taskParams);
     try {
-      const url =
-        process.env.NODE_ENV === "production"
-          ? `${process.env.NEXT_PUBLIC_PROD_API_URL}tasks/${taskId}/move`
-          : `http://localhost:3000/tasks/${taskId}/move`;
-      const response = await axios.put(url, taskParams);
+      const url = `${process.env.NEXT_PUBLIC_API_URL}tasks/${taskId}/move`;
+
+      const response = await axios.put(url, taskParams, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log("response", response);
       if (response.data.newTaskId) {
         const newTaskId = `task-${response.data.newTaskId}`;
@@ -291,14 +317,16 @@ const Board = () => {
 
   const saveColumnReorder = async () => {
     const columnParams = {
-      ids: columns.map((column) => column.id.replace("column-", "")),
+      ids: columns.map((column) => String(column.id).replace("column-", "")),
     };
-    console.log("columnParams", columnParams);
+    console.log("columnParams", columnParams, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     try {
-      const url =
-        process.env.NODE_ENV === "production"
-          ? `${process.env.NEXT_PUBLIC_PROD_API_URL}columns/move`
-          : `http://localhost:3000/columns/move`;
+      const url = `${process.env.NEXT_PUBLIC_API_URL}columns/move`;
+
       const response = await axios.put(url, columnParams);
       console.log("response", response);
     } catch (error) {
