@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "./Header";
-import Modal from "../components/Modal";
-import { RecoilRoot } from "recoil";
-
+import UserProvider from "./provider";
+import { Auth0Provider } from "@auth0/auth0-react";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -19,10 +18,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja">
-      <body>
-        <Header />
-        {children}
-      </body>
+      <UserProvider>
+        <body className={inter.className}>
+          <Header />
+          {children}
+        </body>
+      </UserProvider>
     </html>
   );
 }

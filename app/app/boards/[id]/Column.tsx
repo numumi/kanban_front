@@ -37,7 +37,7 @@ const Column: FC<ColumnProps> = memo(({ column, cursor }: ColumnProps) => {
         items={tasks}
         strategy={rectSortingStrategy}
       >
-        <div>
+        <div data-testid="column">
           <div
             ref={setColumnRef}
             className={`relative w-60 p-1 m-2 bg-gray-200 rounded`}

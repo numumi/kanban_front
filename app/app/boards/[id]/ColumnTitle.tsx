@@ -2,9 +2,10 @@
 import React, { useState } from "react";
 
 import { ColumnType } from "@/types/board-data";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { activeColumnState } from "@/recoils/atoms/boardState";
 import axios from "axios";
+import tokenState from "@/recoils/atoms/tokenState";
 
 type ColumnTitleProps = {
   column: ColumnType;
@@ -15,11 +16,13 @@ const ColumnTitle = ({ column, isEditing, setIsEditing }: ColumnTitleProps) => {
   const [title, setTitle] = useState(column.name);
   const [newTitle, setNewTitle] = useState(title);
   const setActiveColumn = useSetRecoilState(activeColumnState);
+  const token = useRecoilValue(tokenState);
+  const id = parseInt(String(column.id).replace("column-", ""))
 
   const columnParams = {
-    id: column.id.replace("column-", ""),
-    name: newTitle,
-    board_id: column.board_id,
+    column: {
+      name: newTitle,
+    },
   };
 
   const handleTitleClick = () => {
@@ -40,11 +43,12 @@ const ColumnTitle = ({ column, isEditing, setIsEditing }: ColumnTitleProps) => {
       setNewTitle(title);
     } else {
       try {
-        const url =
-          process.env.NODE_ENV === "production"
-            ? `${process.env.NEXT_PUBLIC_PROD_API_URL}columns`
-            : `http://localhost:3000/columns/${columnParams.id}`;
-        await axios.patch(url, columnParams);
+        const url = `${process.env.NEXT_PUBLIC_API_URL}columns/${id}`;
+        await axios.patch(url, columnParams, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
       } catch (error) {
         console.error("データの取得に失敗しました。", error);
       }

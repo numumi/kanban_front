@@ -4,10 +4,15 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import ClearIcon from "@mui/icons-material/Clear";
 
-import { useRecoilState } from "recoil";
-import { columnsState, modalTaskState } from "@/recoils/atoms/boardState";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  activeTaskState,
+  columnsState,
+  modalTaskState,
+} from "@/recoils/atoms/boardState";
 import axios from "axios";
 import { useState } from "react";
+import tokenState from "@/recoils/atoms/tokenState";
 
 type TaskProps = {
   task: TaskType;
@@ -19,6 +24,8 @@ const Task = ({ task, cursor, column }: TaskProps) => {
   const [modalTaskData, setModalTaskData] = useRecoilState(modalTaskState);
   const [isClearing, setIsClearing] = useState(false);
   const [columns, setColumns] = useRecoilState(columnsState);
+  const activeTask = useRecoilValue(activeTaskState);
+  const token = useRecoilValue(tokenState);
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
       id: task.id,
@@ -30,6 +37,8 @@ const Task = ({ task, cursor, column }: TaskProps) => {
   };
 
   const handleMouseUp = async () => {
+    console.log("handleMouseUp");
+    console.log("activeTask", activeTask);
     if (!column) return;
     if (isClearing) {
       console.log("handleClearing");
@@ -37,14 +46,17 @@ const Task = ({ task, cursor, column }: TaskProps) => {
       return;
     }
     const taskParams = {
-      id: task.id.replace("task-", ""),
-      column_id: column.id.replace("column-", ""),
+      id: String(task.id).replace("task-", ""),
+      column_id: String(column.id).replace("column-", ""),
     };
     try {
-      const url = `http://localhost:3000/tasks/${taskParams.id}`;
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/tasks/${taskParams.id}`;
       const response = await axios.get(url, {
         params: {
           column_id: taskParams.column_id,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
       });
       console.log("response.data", response.data);
@@ -59,19 +71,24 @@ const Task = ({ task, cursor, column }: TaskProps) => {
   };
 
   const handleClear = async () => {
+    console.log("handleClear");
     if (!column) return;
     setIsClearing(true);
     const taskParams = {
-      id: task.id.replace("task-", ""),
-      column_id: column.id.replace("column-", ""),
+      id: parseInt(String(task.id).replace("task-", "")),
+      column_id: parseInt(String(column.id).replace("column-", "")),
     };
 
     try {
-      const url =
-        process.env.NODE_ENV === "production"
-          ? `${process.env.NEXT_PUBLIC_PROD_API_URL}tasks/${taskParams.id}`
-          : `http://localhost:3000/tasks/${taskParams.id}`;
-      await axios.delete(url, { params: { column_id: taskParams.column_id } });
+      const url = `${process.env.NEXT_PUBLIC_API_URL}tasks/${taskParams.id}`;
+      await axios.delete(url, {
+        params: {
+          column_id: taskParams.column_id,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      });
       const newColumns = columns.map((_column) => {
         if (_column.id !== column.id) {
           return _column;

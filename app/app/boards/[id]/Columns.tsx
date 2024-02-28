@@ -20,6 +20,7 @@ const Columns: FC<ColumnsProps> = (props) => {
   const { setNodeRef } = useDroppable({
     id: "board",
   });
+  console.log("columns", columns);
   return (
     <SortableContext
       id="board"
@@ -28,6 +29,7 @@ const Columns: FC<ColumnsProps> = (props) => {
     >
       <div
         className="flex"
+        data-testid="columns"
         style={{ minHeight: "100px" }}
         ref={setNodeRef}
       >

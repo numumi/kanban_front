@@ -5,6 +5,8 @@ import { ColumnType } from "@/types/board-data";
 import ClearIcon from "@mui/icons-material/Clear";
 
 import axios from "axios";
+import { useRecoilValue } from "recoil";
+import tokenState from "@/recoils/atoms/tokenState";
 
 type ColumnsProps = {
   boardId: number;
@@ -16,6 +18,7 @@ const AddColumnButton: React.FC<ColumnsProps> = (props) => {
   const { columns, setColumns, boardId } = props;
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState("");
+  const token = useRecoilValue(tokenState);
   const handleAddForm = () => {
     setIsEditing(true);
   };
@@ -38,15 +41,18 @@ const AddColumnButton: React.FC<ColumnsProps> = (props) => {
       return;
     }
     const newColumnParams = {
-      name: name,
-      board_id: boardId,
+      column: {
+        name: name,
+        board_id: boardId,
+      },
     };
     try {
-      const url =
-        process.env.NODE_ENV === "production"
-          ? `${process.env.NEXT_PUBLIC_PROD_API_URL}columns`
-          : `http://localhost:3000/columns`;
-      const response = await axios.post(url, newColumnParams);
+      const url = `${process.env.NEXT_PUBLIC_API_URL}columns`;
+      const response = await axios.post(url, newColumnParams, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const newColumn = {
         id: `column-${response.data.id}`,
         name: name,
@@ -64,7 +70,7 @@ const AddColumnButton: React.FC<ColumnsProps> = (props) => {
   };
 
   return (
-    <div>
+    <div data-testid="addColumn">
       {isEditing ? (
         <div className="w-60 h-20 p-2 m-2 bg-gray-200 rounded">
           <form onSubmit={handleSubmit}>
