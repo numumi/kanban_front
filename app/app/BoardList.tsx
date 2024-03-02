@@ -32,7 +32,7 @@ const BoardList = () => {
   }
 
   return (
-    <div className="grid grid-cols-2 gap-4 p-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
       {boardList.map((board) => (
         <BoardCard key={board.id} board={board} />
       ))}

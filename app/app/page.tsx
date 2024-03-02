@@ -1,10 +1,21 @@
 "use client";
+import { useEffect, useState } from "react";
 import BoardList from "./BoardList";
 import Top from "./Top";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Home() {
-  const { user } = useAuth0(); // Replace with your login check logic
+  const { user, isAuthenticated } = useAuth0(); // Replace with your login check logic
+  const [loading, setLoading] = useState(true);
 
-  return user ? <BoardList /> : <Top />;
+  useEffect(() => {
+    if (user !== undefined) {
+      setLoading(false);
+    }
+  }, [user]);
+
+  if (loading) {
+    return <div>Loading...</div>; // ここにローディングスピナーなどを表示
+  }
+  return isAuthenticated ? <BoardList /> : <Top />;
 }
