@@ -350,7 +350,7 @@ const Board = () => {
         className="p-5"
         style={{
           backgroundImage: `url(${board.image})`,
-          width: "calc(100vw - var(--sidebar-width))",
+          width: "100vw",
           height: "calc(100vh - var(--header-height))",
           overflowX: "auto",
         }}
