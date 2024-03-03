@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import BoardList from "./BoardList";
-import Top from "./Top";
+import BoardList from "../features/components/BoardList";
+import Top from "../components/Top";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Home() {

@@ -36,7 +36,11 @@ const Columns: FC<ColumnsProps> = (props) => {
         {columns.map((column) => (
           <Column key={column.id} column={column} />
         ))}
-        <AddColumnButton columns={columns} setColumns={setColumns} boardId={boardId} />
+        <AddColumnButton
+          columns={columns}
+          setColumns={setColumns}
+          boardId={boardId}
+        />
       </div>
     </SortableContext>
   );

@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { RecoilRoot, useRecoilState } from "recoil";
-import Columns from "@/app/boards/[id]/Columns";
+import Columns from "@/features/components/boards/Columns";
 import "@testing-library/jest-dom";
 import { columnsState } from "@/recoils/atoms/boardState";
 import { useEffect } from "react";

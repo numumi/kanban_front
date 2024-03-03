@@ -1,5 +1,5 @@
 import React from "react";
-import { Board } from "../types/board-list";
+import { Board } from "../../types/board-list";
 import Link from "next/link";
 
 type BoardCardProps = {
