@@ -1,11 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 
 import { ColumnType } from "@/types/board-data";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { activeColumnState } from "@/recoils/atoms/boardState";
 import axios from "axios";
 import tokenState from "@/recoils/atoms/tokenState";
+import useSaveColumnTitle from "@/features/hooks/useSaveColumnTitle";
 
 type ColumnTitleProps = {
   column: ColumnType;
@@ -17,13 +18,7 @@ const ColumnTitle = ({ column, isEditing, setIsEditing }: ColumnTitleProps) => {
   const [newTitle, setNewTitle] = useState(title);
   const setActiveColumn = useSetRecoilState(activeColumnState);
   const token = useRecoilValue(tokenState);
-  const id = parseInt(String(column.id).replace("column-", ""))
-
-  const columnParams = {
-    column: {
-      name: newTitle,
-    },
-  };
+  const id = parseInt(String(column.id).replace("column-", ""));
 
   const handleTitleClick = () => {
     setIsEditing(true);
@@ -38,25 +33,17 @@ const ColumnTitle = ({ column, isEditing, setIsEditing }: ColumnTitleProps) => {
     handleSave();
   };
 
-  const handleSave = async () => {
-    if (newTitle.trim() === "") {
-      setNewTitle(title);
-    } else {
-      try {
-        const url = `${process.env.NEXT_PUBLIC_API_URL}columns/${id}`;
-        await axios.patch(url, columnParams, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-      } catch (error) {
-        console.error("データの取得に失敗しました。", error);
-      }
-      setTitle(newTitle);
-    }
-    setActiveColumn(undefined);
-    setIsEditing(false);
-  };
+  const handleSave = () =>
+    useSaveColumnTitle(
+      newTitle,
+      setNewTitle,
+      title,
+      id,
+      token,
+      setTitle,
+      setActiveColumn,
+      setIsEditing
+    );
 
   return (
     <div className="ml-2 pt-1 w-full cursor-pointer">

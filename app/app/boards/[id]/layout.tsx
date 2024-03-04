@@ -35,11 +35,13 @@ const Layout: React.FC<Props> = ({ children }) => {
           <img
             src="/右矢印.svg"
             alt="menu"
-            style={{ width: "40px", height: "auto", filter: "brightness(0) invert(100%)", }}
+            style={{
+              width: "40px",
+              height: "auto",
+              filter: "brightness(0) invert(100%)",
+            }}
           />
         </div>
-
-        
 
         <div
           className={`${
@@ -47,7 +49,10 @@ const Layout: React.FC<Props> = ({ children }) => {
           } transition-transform duration-300 ease-in-out`}
           style={{ display: isSidebarOpen ? "block" : "none" }}
         >
-          <Sidebar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
+          <Sidebar
+            isSidebarOpen={isSidebarOpen}
+            setIsSidebarOpen={setIsSidebarOpen}
+          />
         </div>
         <main>{children}</main>
       </div>
