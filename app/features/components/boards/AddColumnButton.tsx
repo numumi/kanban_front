@@ -78,7 +78,6 @@ const AddColumnButton: React.FC<ColumnsProps> = (props) => {
               className="w-full"
               type="text"
               onChange={handleChange}
-              onBlur={handleSave}
               maxLength={15}
               value={name}
               autoFocus

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 import { ColumnType, TaskType } from "@/types/board-data";
@@ -7,6 +7,7 @@ import { columnsState } from "@/recoils/atoms/boardState";
 import { useRecoilState, useRecoilValue } from "recoil";
 import axios from "axios";
 import tokenState from "@/recoils/atoms/tokenState";
+import { useOutsideClick } from "@/features/hooks/useOutSideClick";
 
 type ColumnProps = {
   column: ColumnType;
@@ -17,6 +18,9 @@ const AddTaskButton: React.FC<ColumnProps> = (props) => {
   const [taskInput, setTaskInput] = useState("");
   const [columns, setColumns] = useRecoilState(columnsState);
   const token = useRecoilValue(tokenState);
+
+  // useRefを使用してコンポーネントのrefを作成
+  const wrapperRef = useRef(null);
 
   const handleAddForm = () => {
     setIsEditing(true);
@@ -68,17 +72,19 @@ const AddTaskButton: React.FC<ColumnProps> = (props) => {
       setIsEditing(false);
     }
   };
+
+  // カスタムフックを使用して、外側のクリックを検出
+  useOutsideClick(wrapperRef, handleSubmit);
   return (
     <div>
       {isEditing ? (
-        <div>
+        <div ref={wrapperRef}>
           <form className="mt-2 ml-2 mr-2">
             <textarea
               className="w-full p-1 bg-white shadow-md rounded border-2 border-gray-200 hover:border-blue-500"
               placeholder="タイトルを入力"
               autoFocus
               onChange={handleChange}
-              onBlur={handleSubmit}
             />
           </form>
 
