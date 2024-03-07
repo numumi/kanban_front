@@ -8,15 +8,15 @@ const useSaveReorderColumn = (token: string, columns: ColumnType[]) => {
     const columnParams = {
       ids: columns.map((column) => String(column.id).replace("column-", "")),
     };
-    console.log("columnParams", columnParams, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+
     try {
       const url = `${process.env.NEXT_PUBLIC_API_URL}columns/move`;
 
-      const response = await axios.put(url, columnParams);
+      const response = await axios.put(url, columnParams, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log("response", response);
     } catch (error) {
       console.error("データの取得に失敗しました。", error);

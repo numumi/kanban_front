@@ -5,27 +5,13 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import tokenState from "@/recoils/atoms/tokenState";
 import axios from "axios";
 import { boardsState } from "@/recoils/atoms/boardState";
+import { useFetchBoardList } from "../hooks/useFetchBoardList";
 
 const BoardList = () => {
   const [boardList, setBoadList] = useRecoilState(boardsState);
   const token = useRecoilValue(tokenState);
 
-  useEffect(() => {
-    if (!token) return;
-    const fetchBoardList = async () => {
-      try {
-        const response = await axios.get(process.env.NEXT_PUBLIC_API_URL!, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setBoadList(response.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchBoardList();
-  }, [token]);
+  useFetchBoardList(token, setBoadList);
 
   if (!boardList) {
     return <div>⏳loading...</div>;

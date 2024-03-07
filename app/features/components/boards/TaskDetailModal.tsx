@@ -121,6 +121,7 @@ const TaskDetailsModal = () => {
     handleSave();
   };
 
+  // 要リファクタリング
   const handleSave = async () => {
     try {
       const url = `${process.env.NEXT_PUBLIC_API_URL}tasks/${taskParams.id}`;
@@ -143,8 +144,6 @@ const TaskDetailsModal = () => {
       return {
         ..._column,
         tasks: _column.tasks.map((_task) => {
-          console.log("_column", _column);
-          console.log("updateTask", updateTask);
           if (_task.id !== updateTask.id) {
             return _task;
           }
@@ -152,7 +151,6 @@ const TaskDetailsModal = () => {
         }),
       };
     });
-    console.log("newColumns", newColumns);
     setColumns(newColumns);
     setIsEditingTitle(false);
   };

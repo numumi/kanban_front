@@ -9,6 +9,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Login, Logout } from "@mui/icons-material";
 import { useSetRecoilState } from "recoil";
 import tokenState from "@/recoils/atoms/tokenState";
+import { useGetAuth0Token } from "@/features/hooks/useGetAuth0Token";
 
 // import LogoutButton from "../components/LogoutButton";
 
@@ -20,22 +21,11 @@ const Header = () => {
     user,
     loginWithRedirect,
     logout,
-    getAccessTokenSilently,
   } = useAuth0();
 
   const setToken = useSetRecoilState(tokenState);
 
-  useEffect(() => {
-    const getToken = async () => {
-      try {
-        const token = await getAccessTokenSilently({});
-        setToken(token);
-      } catch (e: any) {
-        console.log(e.message);
-      }
-    };
-    getToken();
-  }, []);
+  useGetAuth0Token(setToken);
   return (
     <header
       style={{ height: "var(--header-height)" }}

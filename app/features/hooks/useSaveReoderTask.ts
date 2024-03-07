@@ -3,6 +3,7 @@ import { ColumnType, TaskType } from "@/types/board-data";
 import axios from "axios";
 import { useRecoilState } from "recoil";
 
+// 移動してもtask_idが変わらないようになったので要改修
 const useSaveReorderTask = (
   token: string,
   activeTask: TaskType,

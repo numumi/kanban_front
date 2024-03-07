@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { ColumnType } from "@/types/board-data";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -7,6 +7,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import axios from "axios";
 import { useRecoilValue } from "recoil";
 import tokenState from "@/recoils/atoms/tokenState";
+import { useOutsideClick } from "@/features/hooks/useOutSideClick";
 
 type ColumnsProps = {
   boardId: number;
@@ -19,11 +20,20 @@ const AddColumnButton: React.FC<ColumnsProps> = (props) => {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState("");
   const token = useRecoilValue(tokenState);
+
+  const wrapperRef = useRef(null);
+  const nameRef = useRef(name);
+
+  useEffect(() => {
+    nameRef.current = name;
+  }, [name]);
+
   const handleAddForm = () => {
     setIsEditing(true);
   };
   const handleFormCancel = () => {
     setName("");
+
     setIsEditing(false);
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,13 +46,13 @@ const AddColumnButton: React.FC<ColumnsProps> = (props) => {
   };
 
   const handleSave = async () => {
-    if (name === "") {
+    if (nameRef.current === "") {
       setIsEditing(false);
       return;
     }
     const newColumnParams = {
       column: {
-        name: name,
+        name: nameRef.current,
         board_id: boardId,
       },
     };
@@ -55,7 +65,7 @@ const AddColumnButton: React.FC<ColumnsProps> = (props) => {
       });
       const newColumn = {
         id: `column-${response.data.id}`,
-        name: name,
+        name: nameRef.current,
         board_id: boardId,
         tasks: [],
       };
@@ -69,10 +79,12 @@ const AddColumnButton: React.FC<ColumnsProps> = (props) => {
     }
   };
 
+  // カスタムフックを使用して、外側のクリックを検出
+  useOutsideClick(wrapperRef, handleSave);
   return (
     <div data-testid="addColumn">
       {isEditing ? (
-        <div className="w-60 h-20 p-2 m-2 bg-gray-200 rounded">
+        <div ref={wrapperRef} className="w-60 h-20 p-2 m-2 bg-gray-200 rounded">
           <form onSubmit={handleSubmit}>
             <input
               className="w-full"

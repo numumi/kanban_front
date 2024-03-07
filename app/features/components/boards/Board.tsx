@@ -167,11 +167,9 @@ const Board = () => {
   // ドラッグ開始時に発火する関数
   const handleDragStart = (event: DragStartEvent) => {
     setTimeout(() => {
-      console.log("handleDragStart");
       const { active } = event;
       // ドラッグしたリソースのid
       const id = active.id.toString();
-      console.log("id", id);
       if (id.startsWith("task")) {
         const task = findTask(columns, id);
 
@@ -212,9 +210,6 @@ const Board = () => {
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
-    console.log("handleDragEnd");
-    console.log("activeTask", activeTask);
-    console.log("isDragging", isDragging);
     if (!isDragging) return;
     if (activeTask) {
       useSaveReorderTask(token, activeTask, taskParams, columns, setColumns);

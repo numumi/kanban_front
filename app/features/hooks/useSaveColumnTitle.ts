@@ -7,7 +7,6 @@ const useSaveColumnTitle = (
   setNewTitle: React.Dispatch<React.SetStateAction<string>>,
   title: string,
   id: number,
-
   token: string,
   setTitle: React.Dispatch<React.SetStateAction<string>>,
   setActiveColumn: SetterOrUpdater<ColumnType | undefined>,

@@ -37,8 +37,6 @@ const Task = ({ task, cursor, column }: TaskProps) => {
   };
 
   const handleMouseUp = async () => {
-    console.log("handleMouseUp");
-    console.log("activeTask", activeTask);
     if (!column) return;
     if (isClearing) {
       console.log("handleClearing");
@@ -71,7 +69,6 @@ const Task = ({ task, cursor, column }: TaskProps) => {
   };
 
   const handleClear = async () => {
-    console.log("handleClear");
     if (!column) return;
     setIsClearing(true);
     const taskParams = {

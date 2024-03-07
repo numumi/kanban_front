@@ -1,7 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
-// ref: コンポーネントの参照, callback: 外側をクリックした時に実行する関数
-export const useOutsideClick = (ref: any, callback: () => void) => {
+// 要素の外側クリックでコールバックを実行
+export const useOutsideClick = (
+  ref: React.MutableRefObject<HTMLElement | null>,
+  callback: () => void
+) => {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {

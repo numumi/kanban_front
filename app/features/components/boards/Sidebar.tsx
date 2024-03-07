@@ -6,6 +6,7 @@ import tokenState from "@/recoils/atoms/tokenState";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect } from "react";
 import axios from "axios";
+import { useFetchBoardList } from "@/features/hooks/useFetchBoardList";
 
 type SidebarProps = {
   isSidebarOpen: boolean;
@@ -30,22 +31,7 @@ const Sidebar = (props: SidebarProps) => {
     getToken();
   }, []);
 
-  useEffect(() => {
-    if (!token) return;
-    const fetchBoardList = async () => {
-      try {
-        const response = await axios.get(process.env.NEXT_PUBLIC_API_URL!, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setBoadList(response.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchBoardList();
-  }, [token]);
+  useFetchBoardList(token, setBoadList);
 
   const handleSidebarToggle = () => {
     setIsSidebarOpen(!isSidebarOpen);

@@ -15,9 +15,6 @@ const useColumnReorder = (
   setColumns: React.Dispatch<React.SetStateAction<ColumnType[]>>,
   setIsDragging: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
-  console.log("event", event);
-  console.log("columns", columns);
-  console.log("setIsDragging", setIsDragging);
   const { active, over } = event;
   const id = active.id.toString();
   const overId = over?.id;

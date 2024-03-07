@@ -2,6 +2,7 @@ export type TaskType = {
   id: string;
   name: string;
   description?: string;
+  columnId?: string;
 };
 
 export type ColumnType = {
