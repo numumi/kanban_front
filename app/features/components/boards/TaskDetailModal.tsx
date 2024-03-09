@@ -8,9 +8,10 @@ import {
   columnsState,
   modalTaskState,
 } from "@/recoils/atoms/boardState";
-import axios from "axios";
 import { TaskType } from "@/types/board-data";
 import tokenState from "@/recoils/atoms/tokenState";
+import { updateTaskApi } from "@/features/utils/updateTaskApi";
+import { updateTaskInColumns } from "@/features/utils/boardUtil";
 
 const TaskDetailsModal = () => {
   const setActiveTask = useSetRecoilState(activeTaskState);
@@ -24,7 +25,7 @@ const TaskDetailsModal = () => {
   useEffect(() => {
     if (modalTaskData) {
       setUpdateTask({
-        id: `task-${modalTaskData.task?.id}`,
+        id: `${modalTaskData.task?.id}`,
         name: modalTaskData.task.name,
         description: modalTaskData.task.description,
       });
@@ -53,7 +54,6 @@ const TaskDetailsModal = () => {
     marginTop: "70px",
     marginBottom: "70px",
   };
-  console.log("modalTaskData", modalTaskData);
   const taskParams = {
     id: String(updateTask.id).replace("task-", ""),
     name: updateTask.name,
@@ -97,10 +97,9 @@ const TaskDetailsModal = () => {
   };
 
   const handleDescriptionClick = () => {
-    setIsEditingDescription(true); // 説明をクリックしたら編集モードに切り替える
+    setIsEditingDescription(true);
   };
 
-  //
   const handleDescriptionChange = (
     e: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
@@ -124,34 +123,20 @@ const TaskDetailsModal = () => {
   // 要リファクタリング
   const handleSave = async () => {
     try {
-      const url = `${process.env.NEXT_PUBLIC_API_URL}tasks/${taskParams.id}`;
-      await axios.patch(url, taskParams, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      console.log("taskParams_beforeModalSave", taskParams);
+      const response = await updateTaskApi(token, taskParams);
+      console.log("response_modal", response);
+      setModalTaskData({
+        ...modalTaskData,
+        task: updateTask,
       });
+      setColumns(
+        updateTaskInColumns(columns, updateTask, modalTaskData.column.id)
+      );
     } catch (error) {
-      console.error("データの取得に失敗しました。", error);
+      console.error("データの更新に失敗しました。", error);
     }
-    setModalTaskData({
-      ...modalTaskData,
-      task: updateTask,
-    });
-    const newColumns = columns.map((_column) => {
-      if (_column.id !== modalTaskData.column.id) {
-        return _column;
-      }
-      return {
-        ..._column,
-        tasks: _column.tasks.map((_task) => {
-          if (_task.id !== updateTask.id) {
-            return _task;
-          }
-          return updateTask;
-        }),
-      };
-    });
-    setColumns(newColumns);
+
     setIsEditingTitle(false);
   };
 
