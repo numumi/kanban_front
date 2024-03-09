@@ -10,13 +10,7 @@ type CustomDragOverEvent = DragOverEvent & {
   };
 };
 
-const useTaskReorder = (
-  event: CustomDragOverEvent,
-  columns: ColumnType[],
-  setColumns: React.Dispatch<React.SetStateAction<ColumnType[]>>,
-  setIsDragging: React.Dispatch<React.SetStateAction<boolean>>,
-  setTaskParams: React.Dispatch<React.SetStateAction<{}>>
-) => {
+const reorderTaskDnd = (event: CustomDragOverEvent, columns: ColumnType[]) => {
   const { active, over, delta, activatorEvent } = event;
 
   const id = active.id.toString();
@@ -92,16 +86,15 @@ const useTaskReorder = (
     if (!updatedColumn) return null;
     return updatedColumn.tasks.findIndex((task) => task.id === id);
   };
-  setIsDragging(true);
-  setTaskParams({
+  const newTaskParams = {
     id: parseInt(String(id).replace("task-", "")),
     position: newPosition(),
     source_column_id: parseInt(String(activeColumnId).replace("column-", "")),
     destination_column_id: parseInt(
       String(overColumnId).replace("column-", "")
     ),
-  });
-  setColumns(newColumns);
+  };
+  return { newColumns, newTaskParams };
 };
 
-export default useTaskReorder;
+export default reorderTaskDnd;

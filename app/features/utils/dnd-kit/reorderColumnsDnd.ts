@@ -1,7 +1,5 @@
 import { ColumnType } from "@/types/board-data";
-import { useSetRecoilState } from "recoil";
 import { DragOverEvent } from "@dnd-kit/core";
-import { columnsState } from "@/recoils/atoms/boardState";
 
 type CustomDragOverEvent = DragOverEvent & {
   activatorEvent: {
@@ -9,12 +7,12 @@ type CustomDragOverEvent = DragOverEvent & {
   };
 };
 
-const useColumnReorder = (
+const reorderColumnsDnd = (
   event: CustomDragOverEvent,
-  columns: ColumnType[],
-  setColumns: React.Dispatch<React.SetStateAction<ColumnType[]>>,
-  setIsDragging: React.Dispatch<React.SetStateAction<boolean>>
+  columns: ColumnType[]
+  // setColumns: (columns: ColumnType[]) => void
 ) => {
+  console.log("reorderColumnsDnd");
   const { active, over } = event;
   const id = active.id.toString();
   const overId = over?.id;
@@ -23,15 +21,13 @@ const useColumnReorder = (
   // カラムのインデックスを取得します。
   const activeIndex = active.data?.current?.sortable.index;
   const overIndex = columns.findIndex((column) => column.id === overId);
-
   const newColumns = [...columns];
   // activeIndexのcolumnとoverIndexのcolumnを入れ替える
   [newColumns[activeIndex], newColumns[overIndex]] = [
     newColumns[overIndex],
     newColumns[activeIndex],
   ];
-  setIsDragging(true);
-  setColumns(newColumns);
+  return newColumns;
 };
 
-export default useColumnReorder;
+export default reorderColumnsDnd;
