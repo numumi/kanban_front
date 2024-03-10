@@ -1,5 +1,5 @@
+import { fetchBoardListApi } from "@/app/api/boardApi";
 import { Board } from "@/types/board-list";
-import axios from "axios";
 import { useEffect } from "react";
 import { SetterOrUpdater } from "recoil";
 
@@ -9,18 +9,16 @@ export const useFetchBoardList = (
 ) => {
   useEffect(() => {
     if (!token) return;
+
     const fetchBoardList = async () => {
       try {
-        const response = await axios.get(process.env.NEXT_PUBLIC_API_URL!, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetchBoardListApi(token);
         setBoadList(response.data);
       } catch (err) {
         console.log(err);
       }
     };
+
     fetchBoardList();
   }, [token]);
 };

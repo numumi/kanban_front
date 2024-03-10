@@ -8,6 +8,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import axios from "axios";
 import tokenState from "@/recoils/atoms/tokenState";
 import { useOutsideClick } from "@/hooks/useOutSideClick";
+import { createTaskApi } from "@/app/api/taskApi";
 
 type ColumnProps = {
   column: ColumnType;
@@ -33,7 +34,8 @@ const AddTaskButton: React.FC<ColumnProps> = (props) => {
   };
   const handleSubmit = async () => {
     if (taskInput === "") {
-      return setIsEditing(false);
+      setIsEditing(false)
+      return ;
     }
 
     const newTaskParams = {
@@ -44,12 +46,7 @@ const AddTaskButton: React.FC<ColumnProps> = (props) => {
     };
 
     try {
-      const url = `${process.env.NEXT_PUBLIC_API_URL}tasks`;
-      const response = await axios.post(url, newTaskParams, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await createTaskApi(token, newTaskParams);
 
       const newTask: TaskType = {
         id: `task-${response.data.id}`,

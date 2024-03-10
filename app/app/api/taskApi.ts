@@ -15,8 +15,36 @@ export const saveReorderTask = async (
   taskId: string,
   taskParams: {}
 ) => {
-  const url = `${process.env.NEXT_PUBLIC_API_URL}tasks/${taskId}/move`;
+  const id = parseInt(String(taskId).replace("task-", ""));
+  const url = `${process.env.NEXT_PUBLIC_API_URL}tasks/${id}/move`;
   return await axios.put(url, taskParams, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const createTaskApi = async (token: string, newTaskParams: {}) => {
+  const url = `${process.env.NEXT_PUBLIC_API_URL}tasks`;
+  return await axios.post(url, newTaskParams, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const fetchTaskApi = async (token: string, id: number) => {
+  const url = `${process.env.NEXT_PUBLIC_API_URL}tasks/${id}`;
+  return await axios.get(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const deleteTaskApi = async (token: string, id: number) => {
+  const url = `${process.env.NEXT_PUBLIC_API_URL}tasks/${id}`;
+  return await axios.delete(url, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

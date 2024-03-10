@@ -10,9 +10,10 @@ import {
   columnsState,
   modalTaskState,
 } from "@/recoils/atoms/boardState";
-import axios from "axios";
 import { useState } from "react";
 import tokenState from "@/recoils/atoms/tokenState";
+import { deleteTaskApi } from "@/app/api/taskApi";
+import { fetchTaskApi } from "@/app/api/taskApi";
 
 type TaskProps = {
   task: TaskType;
@@ -43,26 +44,15 @@ const Task = ({ task, cursor, column }: TaskProps) => {
       setIsClearing(false);
       return;
     }
-    const taskParams = {
-      id: String(task.id).replace("task-", ""),
-      column_id: String(column.id).replace("column-", ""),
-    };
+    const taskId = parseInt(String(task.id).replace("task-", ""));
+
     try {
-      const url = `${process.env.NEXT_PUBLIC_API_URL}/tasks/${taskParams.id}`;
-      const response = await axios.get(url, {
-        params: {
-          column_id: taskParams.column_id,
-        },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetchTaskApi(token, taskId);
       console.log("response.data", response.data);
-      const _modalTaskData = {
+      setModalTaskData({
         task: response.data,
         column: column,
-      };
-      setModalTaskData(_modalTaskData);
+      });
     } catch (error) {
       console.error("データの取得に失敗しました。", error);
     }
@@ -71,21 +61,11 @@ const Task = ({ task, cursor, column }: TaskProps) => {
   const handleClear = async () => {
     if (!column) return;
     setIsClearing(true);
-    const taskParams = {
-      id: parseInt(String(task.id).replace("task-", "")),
-      column_id: parseInt(String(column.id).replace("column-", "")),
-    };
+    const taskId = parseInt(String(task.id).replace("task-", ""));
 
     try {
-      const url = `${process.env.NEXT_PUBLIC_API_URL}tasks/${taskParams.id}`;
-      await axios.delete(url, {
-        params: {
-          column_id: taskParams.column_id,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      });
+      const response = await deleteTaskApi(token, taskId);
+      console.log("response", response);
       const newColumns = columns.map((_column) => {
         if (_column.id !== column.id) {
           return _column;

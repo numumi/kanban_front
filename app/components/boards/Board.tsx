@@ -28,8 +28,8 @@ import useBoardData from "@/hooks/useBoardData";
 import { findTask } from "@/utils/boardUtil";
 import reorderTaskDnd from "@/utils/dnd-kit/reorderTaskDnd";
 import reorderColumnsDnd from "@/utils/dnd-kit/reorderColumnsDnd";
-import { saveReorderColumn } from "@/app/api/saveReoderColumn";
-import { saveReorderTask } from "@/app/api/saveReoderTask";
+import { saveReorderColumn } from "@/app/api/columnApi";
+import { saveReorderTask } from "@/app/api/taskApi";
 
 type CustomDragOverEvent = DragOverEvent & {
   activatorEvent: {
@@ -61,6 +61,7 @@ const Board = () => {
       const { active } = event;
       // ドラッグしたリソースのid
       const id = active.id.toString();
+      console.log("activeId", id);
       if (id.startsWith("task")) {
         const task = findTask(columns, id);
 
@@ -80,10 +81,11 @@ const Board = () => {
   const handleDragOver = (event: CustomDragOverEvent) => {
     setTimeout(() => {
       console.log("handleDragOver");
+       
       if (!activeTask && !activeColumn) return;
 
       const id = event.active.id.toString();
-
+      console.log("activeId", id); 
       // idがtaskから始まる場合、taskの移動処理
       // idがcolumnから始まる場合、columnの移動処理
       if (id.startsWith("task")) {

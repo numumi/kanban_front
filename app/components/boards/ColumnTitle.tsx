@@ -4,9 +4,8 @@ import React, { use, useState } from "react";
 import { ColumnType } from "@/types/board-data";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { activeColumnState } from "@/recoils/atoms/boardState";
-import axios from "axios";
 import tokenState from "@/recoils/atoms/tokenState";
-import useSaveColumnTitle from "@/hooks/useSaveColumnTitle";
+import { saveColumnTitle } from "@/app/api/columnApi";
 
 type ColumnTitleProps = {
   column: ColumnType;
@@ -33,17 +32,21 @@ const ColumnTitle = ({ column, isEditing, setIsEditing }: ColumnTitleProps) => {
     handleSave();
   };
 
-  const handleSave = () =>
-    useSaveColumnTitle(
-      newTitle,
-      setNewTitle,
-      title,
-      id,
-      token,
-      setTitle,
-      setActiveColumn,
-      setIsEditing
-    );
+  const handleSave = async () => {
+    if (newTitle.trim() === "") {
+      setNewTitle(title);
+    } else {
+      try {
+        const response = await saveColumnTitle(token, id, newTitle);
+        console.log("response", response);
+        setTitle(newTitle);
+      } catch (error) {
+        console.error("データの更新に失敗しました。", error);
+      }
+    }
+    setActiveColumn(undefined);
+    setIsEditing(false);
+  };
 
   return (
     <div className="ml-2 pt-1 w-full cursor-pointer">

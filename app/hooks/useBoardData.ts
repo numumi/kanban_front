@@ -1,3 +1,4 @@
+import { fetchBoardDataApi } from "@/app/api/boardApi";
 import { boardState, columnsState } from "@/recoils/atoms/boardState";
 import BoardType, { ColumnType } from "@/types/board-data";
 import axios from "axios";
@@ -12,18 +13,12 @@ const useBoardData = (
 ) => {
   useEffect(() => {
     if (!token) return;
-    const fetchBoardList = async () => {
+    const fetchBoardData = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/board/${boardId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetchBoardDataApi(token, boardId);
+
         console.log("response", response);
-        // ここ重いのでサーバーサイドでやる
+        // columnだけidを加工に変更する
         const data = {
           ...response.data,
           columns: response.data.columns.map((column: ColumnType) => ({
@@ -41,7 +36,7 @@ const useBoardData = (
         console.log(err);
       }
     };
-    fetchBoardList();
+    fetchBoardData();
   }, [token, boardId]);
 };
 

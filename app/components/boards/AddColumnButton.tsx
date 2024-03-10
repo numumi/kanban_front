@@ -8,7 +8,7 @@ import axios from "axios";
 import { useRecoilValue } from "recoil";
 import tokenState from "@/recoils/atoms/tokenState";
 import { useOutsideClick } from "@/hooks/useOutSideClick";
-
+import { createColumnApi } from "@/app/api/columnApi";
 
 type ColumnsProps = {
   boardId: number;
@@ -58,12 +58,8 @@ const AddColumnButton: React.FC<ColumnsProps> = (props) => {
       },
     };
     try {
-      const url = `${process.env.NEXT_PUBLIC_API_URL}columns`;
-      const response = await axios.post(url, newColumnParams, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await createColumnApi(token, newColumnParams);
+      console.log("response", response);
       const newColumn = {
         id: `column-${response.data.id}`,
         name: nameRef.current,

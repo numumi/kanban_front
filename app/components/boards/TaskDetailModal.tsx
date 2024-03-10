@@ -123,7 +123,6 @@ const TaskDetailsModal = () => {
   // 要リファクタリング
   const handleSave = async () => {
     try {
-      console.log("taskParams_beforeModalSave", taskParams);
       const response = await updateTaskApi(token, taskParams);
       console.log("response_modal", response);
       setModalTaskData({
