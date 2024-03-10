@@ -6,7 +6,7 @@ import tokenState from "@/recoils/atoms/tokenState";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect } from "react";
 import axios from "axios";
-import { useFetchBoardList } from "@/features/hooks/useFetchBoardList";
+import { useFetchBoardList } from "@/hooks/useFetchBoardList";
 
 type SidebarProps = {
   isSidebarOpen: boolean;

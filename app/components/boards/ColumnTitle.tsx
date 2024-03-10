@@ -6,7 +6,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { activeColumnState } from "@/recoils/atoms/boardState";
 import axios from "axios";
 import tokenState from "@/recoils/atoms/tokenState";
-import useSaveColumnTitle from "@/features/hooks/useSaveColumnTitle";
+import useSaveColumnTitle from "@/hooks/useSaveColumnTitle";
 
 type ColumnTitleProps = {
   column: ColumnType;

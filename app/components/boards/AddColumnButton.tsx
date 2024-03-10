@@ -7,7 +7,8 @@ import ClearIcon from "@mui/icons-material/Clear";
 import axios from "axios";
 import { useRecoilValue } from "recoil";
 import tokenState from "@/recoils/atoms/tokenState";
-import { useOutsideClick } from "@/features/hooks/useOutSideClick";
+import { useOutsideClick } from "@/hooks/useOutSideClick";
+
 
 type ColumnsProps = {
   boardId: number;

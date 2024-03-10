@@ -7,7 +7,7 @@ import { columnsState } from "@/recoils/atoms/boardState";
 import { useRecoilState, useRecoilValue } from "recoil";
 import axios from "axios";
 import tokenState from "@/recoils/atoms/tokenState";
-import { useOutsideClick } from "@/features/hooks/useOutSideClick";
+import { useOutsideClick } from "@/hooks/useOutSideClick";
 
 type ColumnProps = {
   column: ColumnType;

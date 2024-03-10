@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { RecoilRoot } from "recoil";
-import Board from "@/features/components/boards/Board";
+import Board from "@/components/boards/Board";
 import "@testing-library/jest-dom";
 
 jest.mock("next/navigation", () => ({

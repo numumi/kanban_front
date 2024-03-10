@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import Column from "@/features/components/boards/Column";
+import Column from "@/components/boards/Column";
 import "@testing-library/jest-dom";
 import { RecoilRoot, useRecoilState } from "recoil";
 import { columnsState } from "@/recoils/atoms/boardState";

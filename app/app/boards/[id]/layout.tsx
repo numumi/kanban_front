@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import Sidebar from "../../../features/components/boards/Sidebar";
+import Sidebar from "../../../components/boards/Sidebar";
 import { RecoilRoot } from "recoil";
 
 type Props = {

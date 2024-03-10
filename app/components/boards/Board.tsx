@@ -24,12 +24,12 @@ import Columns from "./Columns";
 import Column from "./Column";
 import { useParams } from "next/navigation";
 import tokenState from "@/recoils/atoms/tokenState";
-import useBoardData from "@/features/hooks/useBoardData";
-import { findTask } from "@/features/utils/boardUtil";
-import reorderTaskDnd from "@/features/utils/dnd-kit/reorderTaskDnd";
-import reorderColumnsDnd from "@/features/utils/dnd-kit/reorderColumnsDnd";
-import { saveReorderColumn } from "@/features/utils/dnd-kit/saveReoderColumn";
-import { saveReorderTask } from "@/features/utils/dnd-kit/saveReoderTask";
+import useBoardData from "@/hooks/useBoardData";
+import { findTask } from "@/utils/boardUtil";
+import reorderTaskDnd from "@/utils/dnd-kit/reorderTaskDnd";
+import reorderColumnsDnd from "@/utils/dnd-kit/reorderColumnsDnd";
+import { saveReorderColumn } from "@/app/api/saveReoderColumn";
+import { saveReorderTask } from "@/app/api/saveReoderTask";
 
 type CustomDragOverEvent = DragOverEvent & {
   activatorEvent: {
@@ -92,6 +92,8 @@ const Board = () => {
         const { newColumns, newTaskParams } = reorderResult;
         setColumns(newColumns);
         setTaskParams(newTaskParams);
+        console.log("newTaskParams", taskParams);
+        console.log("newColumns", columns);
         setIsDragging(true);
       } else if (id.startsWith("column")) {
         const newColumns = reorderColumnsDnd(event, columns);

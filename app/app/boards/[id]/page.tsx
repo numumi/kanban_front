@@ -1,6 +1,6 @@
 "use client";
-import Board from "../../../features/components/boards/Board";
-import TaskDetailsModal from "../../../features/components/boards/TaskDetailModal";
+import Board from "../../../components/boards/Board";
+import TaskDetailsModal from "../../../components/boards/TaskDetailModal";
 
 export default function BoardPage() {
   return (

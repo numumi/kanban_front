@@ -1,7 +1,7 @@
 import React, { use, useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
-import Modal from "../../../components/Modal";
+import Modal from "../Modal";
 import ClearIcon from "@mui/icons-material/Clear";
 import {
   activeTaskState,
@@ -10,8 +10,8 @@ import {
 } from "@/recoils/atoms/boardState";
 import { TaskType } from "@/types/board-data";
 import tokenState from "@/recoils/atoms/tokenState";
-import { updateTaskApi } from "@/features/utils/updateTaskApi";
-import { updateTaskInColumns } from "@/features/utils/boardUtil";
+import { updateTaskApi } from "@/app/api/taskApi";
+import { updateTaskInColumns } from "@/utils/boardUtil";
 
 const TaskDetailsModal = () => {
   const setActiveTask = useSetRecoilState(activeTaskState);

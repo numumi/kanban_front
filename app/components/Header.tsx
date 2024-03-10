@@ -9,19 +9,13 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Login, Logout } from "@mui/icons-material";
 import { useSetRecoilState } from "recoil";
 import tokenState from "@/recoils/atoms/tokenState";
-import { useGetAuth0Token } from "@/features/hooks/useGetAuth0Token";
+import { useGetAuth0Token } from "@/hooks/useGetAuth0Token";
 
 // import LogoutButton from "../components/LogoutButton";
 
 const Header = () => {
-  const {
-    isLoading,
-    isAuthenticated,
-    error,
-    user,
-    loginWithRedirect,
-    logout,
-  } = useAuth0();
+  const { isLoading, isAuthenticated, error, user, loginWithRedirect, logout } =
+    useAuth0();
 
   const setToken = useSetRecoilState(tokenState);
 

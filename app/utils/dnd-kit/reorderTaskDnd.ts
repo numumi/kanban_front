@@ -1,4 +1,4 @@
-import { findTask, findColumn } from "@/features/utils/boardUtil";
+import { findTask, findColumn } from "@/utils/boardUtil";
 import { ColumnType, TaskType } from "@/types/board-data";
 import { useRecoilState } from "recoil";
 import { DragOverEvent } from "@dnd-kit/core";
@@ -12,7 +12,7 @@ type CustomDragOverEvent = DragOverEvent & {
 
 const reorderTaskDnd = (event: CustomDragOverEvent, columns: ColumnType[]) => {
   const { active, over, delta, activatorEvent } = event;
-
+  console.log("reorderTaskDnd")
   const id = active.id.toString();
   const overId = over?.id.toString();
   if (!overId) return;

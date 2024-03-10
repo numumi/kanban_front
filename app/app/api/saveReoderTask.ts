@@ -8,10 +8,13 @@ export const saveReorderTask = async (
   taskId: string,
   taskParams: {}
 ) => {
-  const url = `${process.env.NEXT_PUBLIC_API_URL}tasks/${taskId}/move`;
+  const id = parseInt(String(taskId).replace("task-", ""))
+  const url = `${process.env.NEXT_PUBLIC_API_URL}tasks/${id}/move`;
   return await axios.put(url, taskParams, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 };
+
+// 消す
