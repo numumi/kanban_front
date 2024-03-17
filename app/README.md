@@ -9,7 +9,7 @@
 - テスト(実装中)
 - ESLint
 - エラーハンドリング
-- ユーザー認証、認可
+- 認可
 
 ### URL  
 https://kanban-front-one.vercel.app/
