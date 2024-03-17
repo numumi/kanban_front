@@ -30,6 +30,7 @@ import reorderTaskDnd from "@/utils/dnd-kit/reorderTaskDnd";
 import reorderColumnsDnd from "@/utils/dnd-kit/reorderColumnsDnd";
 import { saveReorderColumn } from "@/app/api/columnApi";
 import { saveReorderTask } from "@/app/api/taskApi";
+import Spinner from "../Spinner";
 
 type CustomDragOverEvent = DragOverEvent & {
   activatorEvent: {
@@ -134,7 +135,7 @@ const Board = () => {
     setIsDragging(false);
   };
 
-  if (!board || !columns) return <div>Loading...</div>;
+  if (!board || !columns) return <Spinner />;
 
   return (
     <DndContext
