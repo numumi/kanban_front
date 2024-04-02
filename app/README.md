@@ -3,6 +3,7 @@
 - ドラッグアンドドロップはdnd-kitを使用
 - カラムの移動とタスクの移動ができる
 - dnd-kitのcontext内ではintercepting routeが使えないため bodyタグにモーダルを描写
+- 認証はauth0でFEからBEにtokenを送って検証後にレスポンスを返す
 
 ### 課題
 - WebSocket通信
